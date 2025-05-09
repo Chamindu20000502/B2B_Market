@@ -1,0 +1,28 @@
+#grid
+{
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    margin-left: 3rem;
+    margin-right: 3rem;
+    margin-top: 1rem;
+}
+
+#carousel
+{
+    grid-column :span 5;
+}
+#customizable-area
+{
+    grid-column: span 5;
+}
+
+#product-name
+{
+    padding: 1rem;
+}
+
+.carousel-margin
+{
+    margin-left: 2rem;
+    margin-right: 2rem;
+}

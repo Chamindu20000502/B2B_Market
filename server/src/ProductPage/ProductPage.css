@@ -2,8 +2,8 @@
 {
     display: grid;
     grid-template-columns: repeat(10, 1fr);
-    margin-left: 3rem;
-    margin-right: 3rem;
+    margin-left: 5rem;
+    margin-right: 5rem;
     margin-top: 1rem;
 }
 
@@ -25,4 +25,15 @@
 {
     margin-left: 2rem;
     margin-right: 2rem;
+}
+
+.customize-region
+{
+    margin-top: 3rem;
+}
+
+.variation-title
+{
+    color: black;
+    font-weight: bold;
 }

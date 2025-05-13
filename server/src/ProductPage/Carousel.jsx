@@ -1,4 +1,5 @@
 import Paper from '@mui/material/Paper';
+import Rating from '@mui/material/Rating';
 import './ProductPage.css'
 
 function Carousel()
@@ -7,6 +8,7 @@ function Carousel()
         <div>
           <Paper elevation={0} id='product-name'>
             <h5>Product Name</h5>
+            <Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly size='small' />
             <p>Store link</p>
           </Paper>
           <div id="carouselExampleIndicators" class="carousel slide carousel-margin">

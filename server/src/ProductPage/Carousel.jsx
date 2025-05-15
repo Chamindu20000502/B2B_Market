@@ -1,5 +1,7 @@
 import Paper from '@mui/material/Paper';
 import Rating from '@mui/material/Rating';
+import Stack from '@mui/material/Stack';
+import Avatar from '@mui/material/Avatar';
 import './ProductPage.css'
 
 function Carousel()
@@ -9,7 +11,10 @@ function Carousel()
           <Paper elevation={0} id='product-name'>
             <h5>Product Name</h5>
             <Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly size='small' />
-            <p>Store link</p>
+            <Stack direction="row" gap={1} sx={{alignItems:'center'}}>
+              <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{width:'2rem' , height:'2rem'}}/>
+              <a href="" style={{color:'black'}}>Store link</a>
+            </Stack>
           </Paper>
           <div id="carouselExampleIndicators" class="carousel slide carousel-margin">
   <div class="carousel-indicators">

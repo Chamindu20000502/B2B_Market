@@ -32,19 +32,19 @@ export default function CustomizableArea() {
         <Paper
             sx={{
                 padding: 1,
-                margin: 5,
+                margin: 2,
                 color: 'text.secondary',
                 backgroundColor: '#FAFBFA',   
             }}
         >
             <span class="badge text-bg-warning">Customize</span>
-           <div style={{paddingLeft: '3rem',paddingBottom: '3rem', paddingRight: '3rem'}}>
+           <div style={{paddingLeft: '1.5rem',paddingBottom: '3rem', paddingRight: '1.5rem'}}>
 
             <div className='customize-region'>
              <h5>Price ranges</h5>
             <Divider sx={{backgroundColor:'black'}} />
-            <Box sx={{ flexGrow: 1, p: 2 }}>
-            <Grid container>
+            <Box sx={{ flexGrow: 1, p: 1 }}>
+            <Grid container gap={2}>
             {prices.map((price, index) => {
             return(
                 <Grid

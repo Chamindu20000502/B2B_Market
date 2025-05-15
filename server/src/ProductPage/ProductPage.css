@@ -2,18 +2,19 @@
 {
     display: grid;
     grid-template-columns: repeat(10, 1fr);
-    margin-left: 5rem;
-    margin-right: 5rem;
+    margin-left: 2.5rem;
+    margin-right: 2.5rem;
     margin-top: 1rem;
 }
 
 #carousel
 {
-    grid-column :span 5;
+    grid-column :span 6;
 }
 #customizable-area
 {
-    grid-column: span 5;
+    grid-column: span 4;
+    grid-row: span 2;
 }
 
 #product-name
@@ -36,4 +37,48 @@
 {
     color: black;
     font-weight: bold;
+}
+
+#realted-products-area
+{
+    margin-top: 3rem;
+    grid-column: span 6;
+}
+
+#product-info
+{
+    grid-column: span 5;
+    margin-top: 2rem;
+}
+
+#product-info-table
+{
+    margin-left: 3rem;
+    margin-right: 3rem;
+    margin-top: 1rem;
+}
+
+#description
+{
+    grid-column: span 5;
+    margin-top: 2rem;
+}
+
+#description-area
+{
+    margin-left: 1.5rem;
+    margin-top: 1rem;
+}
+
+#ratings
+{
+    grid-column: span 10;
+    margin-top: 3rem;
+}
+
+#ratings-content
+{
+    margin-left: 5rem;
+    margin-right: 5rem;
+    margin-top: 1rem;
 }

@@ -2,6 +2,9 @@ import Stack from '@mui/material/Stack';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import { useState } from 'react';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Divider from '@mui/material/Divider';
 
 const variations = [
  {  
@@ -31,12 +34,27 @@ const variations = [
 export default function Variations()
 {
     const [selectedChoices, setSelectedChoices] = useState({});
+    const [quantity , setQuantity] = useState('');
 
     function handleChoiceChange(variationTitle, choiceIndex) {
         setSelectedChoices((prevChoices) => ({
             ...prevChoices,
             [variationTitle]: choiceIndex,
         }));
+    }
+
+    function UpdateQuantity(event)
+    {
+        const value = event.target.value;
+        if(isNaN(value))
+        {
+            setQuantity((previosValue)=>{return(previosValue)});
+        }else
+        {
+            setQuantity(value);
+        }
+        
+        console.log(quantity);
     }
 
     if(variations.length > 0)
@@ -71,9 +89,9 @@ export default function Variations()
                                                     },
                                                 },
                                             }}>
-                                                <Stack direction="row" spacing={1} sx={{padding:1}}>
-                                                    {choice.imageUrl !== undefined ? <img src={choice.imageUrl} alt={choice.name} style={{width:'3rem',height:'3rem'}} />:null}
-                                                    <div style={{display:'flex',alignItems:'center',height:'3rem'}}>  
+                                                <Stack direction="row" spacing={1} sx={{padding:0.75}}>
+                                                    {choice.imageUrl !== undefined ? <img src={choice.imageUrl} alt={choice.name} style={{width:'2.5rem',height:'2.5rem'}} />:null}
+                                                    <div style={{display:'flex',alignItems:'center',minHeight:'1rem',minWidth:'2rem'}}>  
                                                         <p>{choice.name}</p>
                                                     </div>
                                                 </Stack>
@@ -86,8 +104,11 @@ export default function Variations()
                         </div>
                     );
                 })}
-
-                <button onClick={()=>{console.log(selectedChoices)}}>Submit</button>
+    
+                <Stack sx={{justifyContent:'center',alignItems:'center',marginTop:'2rem'}} gap={1}>
+                    <div><TextField id="outlined-basic" label="Quantity" variant="outlined" size='small' onChange={UpdateQuantity} value={quantity}/></div>
+                    <div><Button variant="contained" size="large" onClick={()=>{console.log(selectedChoices)}}>Add to Cart</Button></div>
+                </Stack>
             </div>
         );
     }    

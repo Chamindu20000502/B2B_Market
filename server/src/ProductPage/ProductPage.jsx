@@ -1,4 +1,4 @@
-import * as React from 'react';
+import {useEffect , useState} from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Carousel from './Carousel';
@@ -8,59 +8,28 @@ import RelatedProducts from './RelatedProducts';
 import ProductInfo from './ProductInfo';
 import Description from './Description';
 import Ratings from './Ratings';
+import axios from 'axios';
 import './ProductPage.css'
 
 export default function ProductPage() {
-  return (
-    // <div>
-    //   <SearchNavBar />
-    //   <Box sx={{ flexGrow: 1, p: 2 }}>
-    //   <Grid
-    //     container
-    //     sx={{
-    //       '--Grid-borderWidth': '1px',
-    //       borderTop: 'var(--Grid-borderWidth) solid',
-    //       borderLeft: 'var(--Grid-borderWidth) solid',
-    //       borderColor: 'divider',
-    //       '& > div': {
-    //         borderRight: 'var(--Grid-borderWidth) solid',
-    //         borderBottom: 'var(--Grid-borderWidth) solid',
-    //         borderColor: 'divider',
-    //       },
-    //     }}
-    //   >
-    //     <Grid
-    //         minHeight={160}
-    //         size={{
-    //           xs: 12,
-    //           sm: 6,
-    //           md: 4,
-    //           lg: 5,
-    //         }}
-    //       ><Carousel/></Grid>
-    //     <Grid
-    //         minHeight={160}
-    //         size={{
-    //           xs: 12,
-    //           sm: 6,
-    //           md: 4,
-    //           lg: 5,
-    //         }}
-    //       ><CustomizableArea/></Grid>
-    //       <Grid
-    //         minHeight={160}
-    //         size={{
-    //           xs: 12,
-    //           sm: 6,
-    //           md: 4,
-    //           lg: 5,
-    //         }}
-    //       ><CustomizableArea/></Grid>
+  const [data ,setData] = useState();
 
-    //   </Grid>
-    // </Box>
-    // </div>
-    
+  useEffect(() => {
+    const fetchData = async () =>{
+      try {
+        const response = await axios.get('http://localhost:3000/product');
+        setData(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error(error.message);
+      }
+    }
+
+    fetchData();
+
+  }, []);
+
+  return (
     <div>
       <SearchNavBar/>
     <div id='grid' style={{minWidth:'75rem'}}>

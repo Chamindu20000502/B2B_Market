@@ -1,6 +1,7 @@
 import express from "express";
 import env from "dotenv";
 import pg from "pg";
+import bodyParser from "body-parser";
 
 env.config();
 
@@ -14,9 +15,13 @@ const db = new pg.Client({
   port: process.env.DB_PORT
 });
 
+app.use(bodyParser.urlencoded({extended:true}));
+
+
 db.connect();
 
 app.get("/product", async(req,res)=>{
+  res.set('Access-Control-Allow-Origin', '*');
   const product_id = 1;
   var details = {};
   var catagory_id = null;
@@ -26,6 +31,7 @@ app.get("/product", async(req,res)=>{
     const response = await db.query('select * from product where product_id = $1',[product_id]);
     details.name = response.rows[0].name;
     details.description = response.rows[0].description;
+    details.store_id = response.rows[0].store_id;
     catagory_id = response.rows[0].catagory;
 
     try{
@@ -79,6 +85,16 @@ app.get("/product", async(req,res)=>{
   {
     console.log('ERROR : ' + err);
   }
+
+  try
+  {
+    const response = await db.query('select img_url from product_images where product_id = $1',[product_id]);
+    details.images = response.rows;
+  }catch(err)
+  {
+    console.log('ERROR : ' + err);
+  }
+
   
   try
   {
@@ -99,6 +115,19 @@ app.get("/product", async(req,res)=>{
   }
 
   res.json(details);
+});
+
+app.post("/register",async(req,res)=>{
+  const data = req.body;
+  try
+  {
+    await db.query('insert into client (f_name, l_name, country_code, tel, company_name, email, pw) values($1,$2,$3,$4,$5,$6,$7)',[
+      data.f_name, data.l_name, data.country_code, data.tel, data.company_name, data.email, data.pw
+    ]);
+  }catch(err)
+  {
+    console.log('ERROR (register) : ' + err);
+  }
 });
 
 app.listen(PORT, () => {

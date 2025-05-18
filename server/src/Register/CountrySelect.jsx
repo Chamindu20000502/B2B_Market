@@ -3,8 +3,9 @@ import Select from '@mui/joy/Select';
 import Option from '@mui/joy/Option';
 import axios from 'axios';
 
-export default function CountrySelect() {
+export default function CountrySelect(props) {
   const [countries ,setCountries] = useState([]);
+  const [selectedCountry , setSelectedCountry] = useState(null);
 
   useEffect(()=>{
         const fetchData = async ()=>{
@@ -22,7 +23,7 @@ export default function CountrySelect() {
   return (  
     <Select placeholder="Choose one…">
         {countries.map((country)=>{
-            return(<Option key={country.code} value={country.code}>{country.country}</Option>);
+            return(<Option onClick={()=>{props.onSelect(country.code)}} key={country.code} value={country.code}>{country.country}</Option>);
         })}
     </Select>
   );

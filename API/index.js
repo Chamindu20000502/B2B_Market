@@ -17,6 +17,14 @@ const db = new pg.Client({
 
 app.use(bodyParser.urlencoded({extended:true}));
 
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  );
+  next();
+});
 
 db.connect();
 
@@ -118,16 +126,18 @@ app.get("/product", async(req,res)=>{
 });
 
 app.post("/register",async(req,res)=>{
-  const data = req.body;
-  try
-  {
-    await db.query('insert into client (f_name, l_name, country_code, tel, company_name, email, pw) values($1,$2,$3,$4,$5,$6,$7)',[
-      data.f_name, data.l_name, data.country_code, data.tel, data.company_name, data.email, data.pw
-    ]);
-  }catch(err)
-  {
-    console.log('ERROR (register) : ' + err);
-  }
+  // const data = req.body;
+  // try
+  // {
+  //   await db.query('insert into client (f_name, l_name, country_code, tel, company_name, email, pw) values($1,$2,$3,$4,$5,$6,$7)',[
+  //     data.f_name, data.l_name, data.country_code, data.tel, data.company_name, data.email, data.pw
+  //   ]);
+  // }catch(err)
+  // {
+  //   console.log('ERROR (register) : ' + err);
+  // }
+
+  console.log(JSON.parse(req.body));
 });
 
 app.listen(PORT, () => {

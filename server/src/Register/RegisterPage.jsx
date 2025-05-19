@@ -1,6 +1,6 @@
 import Stack from '@mui/material/Stack';
 import './RegisterPage.css'
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Input from '@mui/joy/Input';
@@ -49,8 +49,8 @@ export default function RegisterPage()
     {
         try
         {
-            const response = await axios.post('http://localhost:3000/register',JSON.stringify(formData));
-            console.log(response);
+            const response = await axios.post('http://localhost:3000/register',formData);
+            setError({isError:true,message:response.data});
         }catch(err)
         {
             console.log(err);
@@ -73,7 +73,6 @@ export default function RegisterPage()
         {
             if(formData.pw === formData.c_pw)
             {
-                console.log('Password matched');
                 SendData();
             }else
             {

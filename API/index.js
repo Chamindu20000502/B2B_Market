@@ -2,11 +2,13 @@ import express from "express";
 import env from "dotenv";
 import pg from "pg";
 import bodyParser from "body-parser";
+import bcrypt from 'bcrypt';
 
 env.config();
 
 const app = express();
 const PORT = process.env.PORT;
+const saltRounds = process.env.SALT_ROUNDS;
 const db = new pg.Client({
   user : process.env.DB_USER,
   host : process.env.DB_HOST,
@@ -14,6 +16,8 @@ const db = new pg.Client({
   password : process.env.DB_PW,
   port: process.env.DB_PORT
 });
+
+console.log(saltRounds);
 
 app.use(bodyParser.urlencoded({extended:true}));
 
@@ -26,8 +30,12 @@ app.use(function(req, res, next) {
   next();
 });
 
+app.use(bodyParser.json());
+
 db.connect();
 
+
+//Provide data for product page
 app.get("/product", async(req,res)=>{
   res.set('Access-Control-Allow-Origin', '*');
   const product_id = 1;
@@ -125,20 +133,42 @@ app.get("/product", async(req,res)=>{
   res.json(details);
 });
 
-app.post("/register",async(req,res)=>{
-  // const data = req.body;
-  // try
-  // {
-  //   await db.query('insert into client (f_name, l_name, country_code, tel, company_name, email, pw) values($1,$2,$3,$4,$5,$6,$7)',[
-  //     data.f_name, data.l_name, data.country_code, data.tel, data.company_name, data.email, data.pw
-  //   ]);
-  // }catch(err)
-  // {
-  //   console.log('ERROR (register) : ' + err);
-  // }
 
-  console.log(JSON.parse(req.body));
+
+//Hanndling data coming from register page
+app.post("/register",async(req,res)=>{
+  const data = req.body;
+  const phone_no = '+' + data.phone_code + ' ' +data.phone_number;
+
+  bcrypt.hash(data.pw,saltRounds,async(err,hash)=>{
+    if(err)
+    {
+      console.log('ERROR (hashing) => ' + err);
+      res.send(err);
+    }else
+    {
+      console.log('hash : ' + hash);
+      try
+      {
+        await db.query('insert into client (f_name, l_name, country_code, tel, company_name, email, pw) values($1,$2,$3,$4,$5,$6,$7)',[
+        data.f_name, data.l_name, data.country_code,phone_no, data.company, data.email, hash
+        ]);
+      }catch(err)
+      {
+        console.log('ERROR (register) : ' + err);
+
+        switch(err.constraint.split("_")[1])
+        {
+          case 'tel' : res.send("This phone number is already registered!"); break;
+          case 'email' : res.send("This email is already registered!"); break;
+          default : res.send("Something went wrong!");
+        }
+      }
+    }
+  });
 });
+
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

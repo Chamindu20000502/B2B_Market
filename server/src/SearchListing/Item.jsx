@@ -17,7 +17,7 @@ function Item()
                 </div>
                 <div className="col-md-9">
                     <div className="card-body">
-                        <Link to='/product/:0'><h5 className="card-title">Female Shoes (Example product)</h5></Link>
+                        <Link to={`/product/${1}`}><h5 className="card-title">Female Shoes (Example product)</h5></Link>
                         <p className="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
                         <p className="card-text"><small className="text-body-secondary">Last updated 3 mins ago</small></p>
                     </div>

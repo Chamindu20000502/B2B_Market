@@ -36,9 +36,9 @@ db.connect();
 
 
 //Provide data for product page
-app.get("/product", async(req,res)=>{
+app.get("/product/:id", async(req,res)=>{
   res.set('Access-Control-Allow-Origin', '*');
-  const product_id = 1;
+  const product_id = req.params.id;
   var details = {};
   var catagory_id = null;
 

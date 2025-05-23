@@ -4,16 +4,16 @@ import SearchListing from './SearchListing/SearchListing';
 import { BrowserRouter ,Routes , Route } from 'react-router-dom';
 import ProductPage from './ProductPage/ProductPage';
 import RegisterPage from './Register/RegisterPage'
+import { Switch } from '@mui/material';
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Home/>}></Route>
         <Route path='/search' element={<SearchListing/>}></Route>
-        <Route path='/product/:id' element={<ProductPage id='0'></ProductPage>}></Route>
+        <Route path='/product/:id' element={<ProductPage></ProductPage>}></Route>
         <Route path='/register' element={<RegisterPage/>}></Route>
       </Routes>
     </BrowserRouter>

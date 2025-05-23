@@ -29,31 +29,29 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
+function createData(name, calories) {
+  return { name, calories };
 }
 
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
 
-export default function ProductInfo() {
+
+export default function ProductInfo(props) {
+  const rows = [
+  createData('Brand',props.data.attributes[0].brand_name),
+  createData('Model',props.data.attributes[0].model),
+  createData('Place of origin',props.data.attributes[0].origin),
+  createData('Payment methods',props.data.attributes[0].payment),
+  createData('Shipping',props.data.attributes[0].shipping),
+  createData('Single package size',props.data.attributes[0].single_package_size),
+  createData('Single package weight',props.data.attributes[0].single_package_weight),
+  createData('Warrenty',props.data.attributes[0].warrenty),
+];
   return (
     <div>
         <h2>Product Info</h2>
         <div id='product-info-table'>
             <TableContainer component={Paper} >
       <Table aria-label="customized table" sx={{p:5}}>
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>Dessert (100g serving)</StyledTableCell>
-            <StyledTableCell align="right">Calories</StyledTableCell>
-          </TableRow>
-        </TableHead>
         <TableBody>
           {rows.map((row) => (
             <StyledTableRow key={row.name}>

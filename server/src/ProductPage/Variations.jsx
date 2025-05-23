@@ -31,7 +31,7 @@ const variations = [
         },
 ];
 
-export default function Variations()
+export default function Variations(props)
 {
     const [selectedChoices, setSelectedChoices] = useState({});
     const [quantity , setQuantity] = useState('');
@@ -46,7 +46,7 @@ export default function Variations()
     function UpdateQuantity(event)
     {
         const value = event.target.value;
-        if(isNaN(value))
+        if(value < 0)
         {
             setQuantity((previosValue)=>{return(previosValue)});
         }else
@@ -62,15 +62,15 @@ export default function Variations()
         return(
             <div>
                 {
-                variations.map((variation, index) => {
+                props.data.variations.map((variation, index) => {
                     const [selectedCard, setSelectedCard] = useState(null);
                     function SetChoice(i) {                                         
                         setSelectedCard(i);
-                        handleChoiceChange(variation.title, i);
+                        handleChoiceChange(variation.name, i);
                     }
                     return(
                         <div key={index} style={{paddingBottom:'1.5rem'}}>
-                            <h5 className='variation-title'>{variation.title}</h5>
+                            <h5 className='variation-title'>{variation.name}</h5>
                         <div style={{display:'flex',flexDirection:'row',flexWrap:'wrap',gap: '1rem'}}>
                             {variation.choices.map((choice, index) => {
                                 return(
@@ -90,9 +90,9 @@ export default function Variations()
                                                 },
                                             }}>
                                                 <Stack direction="row" spacing={1} sx={{padding:0.75}}>
-                                                    {choice.imageUrl !== undefined ? <img src={choice.imageUrl} alt={choice.name} style={{width:'2.5rem',height:'2.5rem'}} />:null}
+                                                    {choice.img_url != null ? <img src={choice.img_url} alt={choice.choice} style={{width:'2.5rem',height:'2.5rem'}} />:null}
                                                     <div style={{display:'flex',alignItems:'center',minHeight:'1rem',minWidth:'2rem'}}>  
-                                                        <p>{choice.name}</p>
+                                                        <p>{choice.choice}</p>
                                                     </div>
                                                 </Stack>
                                             </CardActionArea>
@@ -106,7 +106,7 @@ export default function Variations()
                 })}
     
                 <Stack sx={{justifyContent:'center',alignItems:'center',marginTop:'2rem'}} gap={1}>
-                    <div><TextField id="outlined-basic" label="Quantity" variant="outlined" size='small' onChange={UpdateQuantity} value={quantity}/></div>
+                    <div><TextField id="outlined-basic" type='number' label="Quantity" variant="outlined" size='small' onChange={UpdateQuantity} value={quantity}/></div>
                     <div><Button variant="contained" size="large" onClick={()=>{console.log(selectedChoices)}}>Add to Cart</Button></div>
                 </Stack>
             </div>

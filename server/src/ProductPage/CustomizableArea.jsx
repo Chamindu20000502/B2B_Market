@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
 import Variations from './Variations';
+import { Typography } from '@mui/material';
 
 const prices = [{
     range: '0-100',
@@ -27,7 +28,7 @@ const prices = [{
 
 
 
-export default function CustomizableArea() {
+export default function CustomizableArea(props) {
     return(
         <Paper
             sx={{
@@ -45,7 +46,7 @@ export default function CustomizableArea() {
             <Divider sx={{backgroundColor:'black'}} />
             <Box sx={{ flexGrow: 1, p: 1 }}>
             <Grid container gap={2}>
-            {prices.map((price, index) => {
+            {props.data.price_ranges.map((price, index) => {
             return(
                 <Grid
                 sx={{padding: 1}}
@@ -56,7 +57,7 @@ export default function CustomizableArea() {
                         md: 4,
                         lg: 3,
                     }}
-                    ><p>{price.range} units</p><h3>${price.price}</h3></Grid>
+                    ><Typography>{price.quantity_min} - {price.quantity_max}</Typography><Typography>units</Typography><h3>${price.price}</h3></Grid>
                 );
             })}
             </Grid>
@@ -67,7 +68,7 @@ export default function CustomizableArea() {
             <h5>Variations</h5>
             <Divider sx={{backgroundColor:'black'}} />
             <div style={{paddingTop:'1rem',paddingLeft:'2rem'}}>
-                <Variations/>
+                <Variations data={props.data}/>
             </div>
         </div>
            </div>

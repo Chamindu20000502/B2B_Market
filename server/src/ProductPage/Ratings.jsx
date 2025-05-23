@@ -7,60 +7,32 @@ import Rating from '@mui/material/Rating';
 import Avatar from '@mui/material/Avatar';
 import './ProductPage.css'
 
-const ratings = [
-    {
-        name:'Chamindu',
-        imgUrl:'',
-        rating:3,
-        description:'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa quod amet odit dignissimos illo maiores similique rem aliquid quisquam? Commodi voluptatem fuga inventore libero corrupti debitis illum doloribus cupiditate deserunt?'
-    },
-    {
-        name:'Dilshan',
-        imgUrl:'',
-        rating:3,
-        description:'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa quod amet odit dignissimos illo maiores similique rem aliquid quisquam? Commodi voluptatem fuga inventore libero corrupti debitis illum doloribus cupiditate deserunt?'
-    },
-    {
-        name:'Dhanapala',
-        imgUrl:'',
-        rating:3,
-        description:'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa quod amet odit dignissimos illo maiores similique rem aliquid quisquam? Commodi voluptatem fuga inventore libero corrupti debitis illum doloribus cupiditate deserunt?'
-    },
-    {
-        name:'Chamindu',
-        imgUrl:'',
-        rating:3,
-        description:'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa quod amet odit dignissimos illo maiores similique rem aliquid quisquam? Commodi voluptatem fuga inventore libero corrupti debitis illum doloribus cupiditate deserunt?'
-    },
-];
-
-
-function rowContent(index) {
+export default function Ratings(props) {
+  function rowContent(index) {
   return (
-    <React.Fragment>
-      <TableCell>
-        <Stack>
+    <React.Fragment sx={{width:'100%'}}>
+      <TableCell sx={{width:'100%'}}>
+        <Stack sx={{width:'100%'}}>
             <Stack direction='row' spacing={1} sx={{alignItems:'center'}}>
                 <Avatar sx={{width:'2rem',height:'2rem'}} alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-                <h6>{ratings[index].name}</h6>
+                <h6>{props.data.reviews[index].buyer_id}</h6>
             </Stack>
             
-            <Rating value={ratings[index].rating} size='small' readOnly />
-            <p>{ratings[index].description}</p>
+            <Rating value={props.data.reviews[index].rate} size='small' readOnly />
+            <p>{props.data.reviews[index].description}</p>
         </Stack>
       </TableCell>
     </React.Fragment>
   );
 }
 
-export default function Ratings() {
   return (
     <div>
         <h2>Ratings and Reviews</h2>
-    <div id='ratings-content'>
+    <div id='ratings-content' style={{width:'100%'}}>
         <Paper style={{ height: 400, width: '100%' }}>
-            <TableVirtuoso
-                data={ratings}
+            <TableVirtuoso sx={{width:'100%'}}
+                data={props.data.reviews}
                 itemContent={rowContent}
             />
         </Paper>

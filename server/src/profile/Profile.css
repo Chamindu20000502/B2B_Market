@@ -1,0 +1,26 @@
+#grid
+{
+    display: grid;
+    grid-template-columns: repeat(12,1fr);
+}
+
+#content{
+    grid-column: span 10;
+    margin :1rem;
+}
+
+#navigation{
+    grid-column: span 2;
+    margin: 1rem;
+}
+
+#top-bar{
+    grid-column: span 12;
+}
+
+#nav-flex
+{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

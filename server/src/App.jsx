@@ -4,7 +4,7 @@ import SearchListing from './SearchListing/SearchListing';
 import { BrowserRouter ,Routes , Route } from 'react-router-dom';
 import ProductPage from './ProductPage/ProductPage';
 import RegisterPage from './Register/RegisterPage'
-import { Switch } from '@mui/material';
+import ProfilePage from './profile/ProfilePage'
 
 function App() {
 
@@ -15,6 +15,7 @@ function App() {
         <Route path='/search' element={<SearchListing/>}></Route>
         <Route path='/product/:id' element={<ProductPage></ProductPage>}></Route>
         <Route path='/register' element={<RegisterPage/>}></Route>
+        <Route path='/profile' element={<ProfilePage/>}></Route>
       </Routes>
     </BrowserRouter>
   )

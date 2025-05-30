@@ -7,51 +7,86 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { TableVirtuoso } from 'react-virtuoso';
-import Chance from 'chance';
-
-const chance = new Chance(42);
-
-function createData(id) {
-  return {
-    id,
-    firstName: chance.first(),
-    lastName: chance.last(),
-    age: chance.age(),
-    phone: chance.phone(),
-    state: chance.state({ full: true }),
-  };
-}
+import Checkbox from '@mui/material/Checkbox';
+import { Typography } from '@mui/material';
+import Stack from '@mui/material/Stack';
 
 const columns = [
   {
     width: 100,
-    label: 'First Name',
-    dataKey: 'firstName',
-  },
-  {
-    width: 100,
-    label: 'Last Name',
-    dataKey: 'lastName',
+    label: 'Item Name',
+    dataKey: 'itemName',
   },
   {
     width: 50,
-    label: 'Age',
-    dataKey: 'age',
+    label: 'Quantity',
+    dataKey: 'quantity',
     numeric: true,
   },
   {
-    width: 110,
-    label: 'State',
-    dataKey: 'state',
+    width: 100,
+    label: 'Shop Name',
+    dataKey: 'shopName',
   },
   {
-    width: 130,
-    label: 'Phone Number',
-    dataKey: 'phone',
+    width: 100,
+    label: 'Order Number',
+    dataKey: 'orderNumber',
+    numeric: true,
+  },
+  {
+    width: 100,
+    label: 'Status',
+    dataKey: 'status',
+  },
+  {
+    width: 100,
+    label: 'Ordered Data',
+    dataKey: 'orderedDate',
+  },
+  {
+    width: 100,
+    label: 'Days to Receive',
+    dataKey: 'daysToReceive',
+    numeric: true,
+  },
+  {
+    width: 100,
+    label: 'Payment Method',
+    dataKey: 'paymentMethod',
+  },
+  {
+    width: 100,
+    label: 'Total Price',
+    dataKey: 'totalPrice',
+    numeric: true,
   },
 ];
 
-const rows = Array.from({ length: 2 }, (_, index) => createData(index));
+const rows = [
+  {
+    itemName: 'Item 1',
+    quantity: 2,
+    shopName: 'Shop A',
+    orderNumber: 12345,
+    status: 'Shipped',
+    orderedDate: '2023-10-01',
+    daysToReceive: 5,
+    paymentMethod :'Credit Card',
+    totalPrice: 50.00,
+  },
+  {
+    itemName: 'Item 2',
+    quantity: 1,
+    shopName: 'Shop B',
+    orderNumber: 12346,
+    status: 'Delivered',
+    orderedDate: '2023-10-02',
+    daysToReceive: 3,
+    paymentMethod :'PayPal',
+    totalPrice: 30.00,
+  },
+];
 
 const VirtuosoTableComponents = {
   Scroller: React.forwardRef((props, ref) => (
@@ -99,8 +134,18 @@ function rowContent(_index, row) {
 }
 
 export default function ReactVirtualizedTable() {
+  const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
   return (
-    <Paper style={{ height: 400, width: '100%' }}>
+    <div>
+      <Stack direction='row' sx={{alignItems:'center'}}>
+        <Paper elevation={2} sx={{backgroundColor:'#4169E1',color:'white',padding:'0rem'}}><h2 style={{marginRight:'1rem',marginLeft:'1rem'}}>Orders</h2></Paper>
+        <Stack direction='row' sx={{alignItems:'center',marginBottom:'1rem',marginLeft:'3rem'}}>
+          <Typography sx={{fontWeight:'bold'}}>Status : </Typography>
+          <Stack direction='row' sx={{alignItems:'center'}}><Checkbox sx={{floodColor:'red'}} defaultChecked /><Typography>del</Typography></Stack>
+          <Stack direction='row' sx={{alignItems:'center'}}><Checkbox /><Typography>undel</Typography></Stack>
+        </Stack>
+      </Stack>
+    <Paper style={{ height: '30rem', width: '100%' }}>
       <TableVirtuoso
         data={rows}
         components={VirtuosoTableComponents}
@@ -108,5 +153,14 @@ export default function ReactVirtualizedTable() {
         itemContent={rowContent}
       />
     </Paper>
+    </div>
   );
 }
+
+
+
+
+
+
+
+

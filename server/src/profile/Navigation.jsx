@@ -8,6 +8,7 @@ import CardActionArea from '@mui/material/CardActionArea';
 import Stack from '@mui/material/Stack';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ViewListIcon from '@mui/icons-material/ViewList';
+import RateReviewIcon from '@mui/icons-material/RateReview';
 
 const cards = [
   {
@@ -19,8 +20,8 @@ const cards = [
     title: 'Orders',
   },
   {
-    icon : <ViewListIcon sx={{ fontSize: 40}} />,
-    title: 'Humans',
+    icon : <RateReviewIcon sx={{ fontSize: 40}} />,
+    title: 'To Review',
   },
 ];
 

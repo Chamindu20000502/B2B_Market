@@ -168,7 +168,50 @@ app.post("/register",async(req,res)=>{
   });
 });
 
-  
+app.get("/account/:id", async(req,res)=>{
+  const id = req.params.id;
+  var details = [];
+  try
+  {
+    const response = await db.query('select * from orders inner join order_status on orders.status_id = order_status.status_id inner join payment_method on orders.pay_method_id = payment_method.id where buyer_id = $1',[id]);
+    
+    if(response.rowCount === 1)
+    {
+      try
+      {
+        const response_2_1 = await db.query('select company_name from client where id = $1',[response.rows[0].seller_id]);
+        const response_2_2 = await db.query('select name from product where product_id = $1',[response.rows[0].product_id]);
+        details.push({...response.rows[0],...response_2_1.rows[0],...response_2_2.rows[0]});
+        res.json(details);
+      }catch(err)
+      {
+        console.log('ERROR (response 2): ' + err);
+      }
+    }else if(response.rowCount > 1)
+    {
+      for(var i = 0; i < response.rowCount; i++)
+      {
+        try
+        {
+          const response_3_1 = await db.query('select company_name from client where id = $1',[response.rows[i].seller_id]);
+          const response_3_2 = await db.query('select name from product where product_id = $1',[response.rows[i].product_id]);
+          details.push({...response.rows[i],...response_3_1.rows[0],...response_3_2.rows[0]});
+        }catch(err)
+        {
+          console.log('ERROR (response 3): ' + err);
+        }
+      }
+      res.json(details);
+    }else
+    {
+      res.json([]);
+    }
+
+  }catch(err)
+  {
+    console.log('ERROR : ' + err);
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -10,55 +10,57 @@ import { TableVirtuoso } from 'react-virtuoso';
 import Checkbox from '@mui/material/Checkbox';
 import { Typography } from '@mui/material';
 import Stack from '@mui/material/Stack';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import axios from 'axios';
 
 const columns = [
   {
     width: 100,
     label: 'Item Name',
-    dataKey: 'itemName',
+    dataKey: 'name',
   },
   {
     width: 50,
     label: 'Quantity',
-    dataKey: 'quantity',
+    dataKey: 'qty',
     numeric: true,
   },
   {
     width: 100,
     label: 'Shop Name',
-    dataKey: 'shopName',
+    dataKey: 'company_name',
   },
   {
     width: 100,
     label: 'Order Number',
-    dataKey: 'orderNumber',
+    dataKey: 'order_number',
     numeric: true,
   },
   {
     width: 100,
     label: 'Status',
-    dataKey: 'status',
+    dataKey: 'order_state',
   },
   {
     width: 100,
     label: 'Ordered Data',
-    dataKey: 'orderedDate',
+    dataKey: 'placed_date',
   },
   {
     width: 100,
     label: 'Days to Receive',
-    dataKey: 'daysToReceive',
+    dataKey: 'eta_days',
     numeric: true,
   },
   {
     width: 100,
     label: 'Payment Method',
-    dataKey: 'paymentMethod',
+    dataKey: 'pay_method',
   },
   {
     width: 100,
     label: 'Total Price',
-    dataKey: 'totalPrice',
+    dataKey: 'price',
     numeric: true,
   },
 ];
@@ -87,6 +89,13 @@ const rows = [
     totalPrice: 30.00,
   },
 ];
+
+const theme = createTheme({
+  palette: {
+    color: {
+      main: '#4169E1', // Royal Blue
+    },
+  }});
 
 const VirtuosoTableComponents = {
   Scroller: React.forwardRef((props, ref) => (
@@ -135,24 +144,46 @@ function rowContent(_index, row) {
 
 export default function ReactVirtualizedTable() {
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(import.meta.env.VITE_API+'/account/1');
+        setData(response.data);
+      } catch (error) {
+        console.error(error.message);
+      }
+    }
+  fetchData();
+  }, []);
+
   return (
     <div>
+      {data ? <div>
       <Stack direction='row' sx={{alignItems:'center'}}>
         <Paper elevation={2} sx={{backgroundColor:'#4169E1',color:'white',padding:'0rem'}}><h2 style={{marginRight:'1rem',marginLeft:'1rem'}}>Orders</h2></Paper>
-        <Stack direction='row' sx={{alignItems:'center',marginBottom:'1rem',marginLeft:'3rem'}}>
-          <Typography sx={{fontWeight:'bold'}}>Status : </Typography>
-          <Stack direction='row' sx={{alignItems:'center'}}><Checkbox sx={{floodColor:'red'}} defaultChecked /><Typography>del</Typography></Stack>
-          <Stack direction='row' sx={{alignItems:'center'}}><Checkbox /><Typography>undel</Typography></Stack>
-        </Stack>
+        <ThemeProvider theme={theme}>
+          <Stack direction='row' sx={{alignItems:'center',marginBottom:'1rem',marginLeft:'3rem'}}>
+            <Typography sx={{fontWeight:'bold'}}>Status : </Typography>
+            <Stack direction='row' sx={{alignItems:'center',marginRight:'2rem'}}><Checkbox sx={{color:'color.main'}} defaultChecked /><Typography>Pending</Typography></Stack>
+            <Stack direction='row' sx={{alignItems:'center',marginRight:'2rem'}}><Checkbox sx={{color:'color.main'}} /><Typography>Confirmed</Typography></Stack>
+            <Stack direction='row' sx={{alignItems:'center',marginRight:'2rem'}}><Checkbox sx={{color:'color.main'}} /><Typography>In Progress</Typography></Stack>
+            <Stack direction='row' sx={{alignItems:'center',marginRight:'2rem'}}><Checkbox sx={{color:'color.main'}} /><Typography>Shipped</Typography></Stack>
+            <Stack direction='row' sx={{alignItems:'center',marginRight:'2rem'}}><Checkbox sx={{color:'color.main'}} /><Typography>In Transit</Typography></Stack>
+            <Stack direction='row' sx={{alignItems:'center',marginRight:'2rem'}}><Checkbox sx={{color:'color.main'}} /><Typography>Delivered</Typography></Stack>
+          </Stack>
+        </ThemeProvider>
       </Stack>
     <Paper style={{ height: '30rem', width: '100%' }}>
       <TableVirtuoso
-        data={rows}
+        data={data}
         components={VirtuosoTableComponents}
         fixedHeaderContent={fixedHeaderContent}
         itemContent={rowContent}
       />
     </Paper>
+    </div> : null}
     </div>
   );
 }

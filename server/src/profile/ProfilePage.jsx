@@ -5,6 +5,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import BuyDash from "./BuyDash";
 import { useState } from "react";
+import ToReview from "./ToReview";
 
 export default function ProfilePage()
 {
@@ -69,7 +70,7 @@ function ContentPage(props)
             return <BuyDash/>;
         case 'orders':
             return <Orders/>;
-        case 'humans':
-            return <h1>Humans</h1>;
+        case 'to review':
+            return <ToReview/>;
     }
 }

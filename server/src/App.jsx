@@ -15,7 +15,7 @@ function App() {
         <Route path='/search' element={<SearchListing/>}></Route>
         <Route path='/product/:id' element={<ProductPage></ProductPage>}></Route>
         <Route path='/register' element={<RegisterPage/>}></Route>
-        <Route path='/profile' element={<ProfilePage/>}></Route>
+        <Route path='/account' element={<ProfilePage/>}></Route>
       </Routes>
     </BrowserRouter>
   )

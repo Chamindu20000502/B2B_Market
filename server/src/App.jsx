@@ -4,7 +4,7 @@ import SearchListing from './SearchListing/SearchListing';
 import { BrowserRouter ,Routes , Route } from 'react-router-dom';
 import ProductPage from './ProductPage/ProductPage';
 import RegisterPage from './Register/RegisterPage'
-import ProfilePage from './profile/ProfilePage'
+import AccountPage from './Account/AccountPage'
 
 function App() {
 
@@ -15,7 +15,7 @@ function App() {
         <Route path='/search' element={<SearchListing/>}></Route>
         <Route path='/product/:id' element={<ProductPage></ProductPage>}></Route>
         <Route path='/register' element={<RegisterPage/>}></Route>
-        <Route path='/account' element={<ProfilePage/>}></Route>
+        <Route path='/account' element={<AccountPage/>}></Route>
       </Routes>
     </BrowserRouter>
   )

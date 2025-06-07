@@ -168,8 +168,10 @@ app.post("/register",async(req,res)=>{
   });
 });
 
-app.get("/account/:id", async(req,res)=>{
+app.get("/account/:id/:status_id", async(req,res)=>{
   const id = req.params.id;
+  const status_list = req.params.status_id.split(",");
+  console.log('status_list : ' + status_list);
   var details = [];
   try
   {

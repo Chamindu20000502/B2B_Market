@@ -65,31 +65,6 @@ const columns = [
   },
 ];
 
-const rows = [
-  {
-    itemName: 'Item 1',
-    quantity: 2,
-    shopName: 'Shop A',
-    orderNumber: 12345,
-    status: 'Shipped',
-    orderedDate: '2023-10-01',
-    daysToReceive: 5,
-    paymentMethod :'Credit Card',
-    totalPrice: 50.00,
-  },
-  {
-    itemName: 'Item 2',
-    quantity: 1,
-    shopName: 'Shop B',
-    orderNumber: 12346,
-    status: 'Delivered',
-    orderedDate: '2023-10-02',
-    daysToReceive: 3,
-    paymentMethod :'PayPal',
-    totalPrice: 30.00,
-  },
-];
-
 const theme = createTheme({
   palette: {
     color: {
@@ -143,13 +118,13 @@ function rowContent(_index, row) {
 }
 
 export default function ReactVirtualizedTable() {
-  const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
   const [data, setData] = useState(null);
+  const [status_list, setStatusList] = useState(['1']);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(import.meta.env.VITE_API+'/account/1');
+        const response = await axios.get(import.meta.env.VITE_API+`/account/1/${status_list}`);
         setData(response.data);
       } catch (error) {
         console.error(error.message);
@@ -157,6 +132,31 @@ export default function ReactVirtualizedTable() {
     }
   fetchData();
   }, []);
+
+  async function OnCheckClicked(event)
+  {
+    const value = event.target.value;
+    let newStatusList = [...status_list];
+
+    if (event.target.checked) {
+      newStatusList.push(value);
+    } else {
+      newStatusList = newStatusList.filter(status => status !== value);
+    }
+
+    setStatusList(newStatusList);
+
+    console.log(newStatusList);
+    if (newStatusList.length !== 0) {
+      try
+      {
+        const response = await axios.get(import.meta.env.VITE_API+`/account/1/${newStatusList}`);
+        setData(response.data);
+      }catch (error) {
+        console.error(error.message);
+      }
+    }
+  }
 
   return (
     <div>
@@ -166,12 +166,12 @@ export default function ReactVirtualizedTable() {
         <ThemeProvider theme={theme}>
           <Stack direction='row' sx={{alignItems:'center',marginBottom:'1rem',marginLeft:'3rem'}}>
             <Typography sx={{fontWeight:'bold'}}>Status : </Typography>
-            <Stack direction='row' sx={{alignItems:'center',marginRight:'2rem'}}><Checkbox sx={{color:'color.main'}} defaultChecked /><Typography>Pending</Typography></Stack>
-            <Stack direction='row' sx={{alignItems:'center',marginRight:'2rem'}}><Checkbox sx={{color:'color.main'}} /><Typography>Confirmed</Typography></Stack>
-            <Stack direction='row' sx={{alignItems:'center',marginRight:'2rem'}}><Checkbox sx={{color:'color.main'}} /><Typography>In Progress</Typography></Stack>
-            <Stack direction='row' sx={{alignItems:'center',marginRight:'2rem'}}><Checkbox sx={{color:'color.main'}} /><Typography>Shipped</Typography></Stack>
-            <Stack direction='row' sx={{alignItems:'center',marginRight:'2rem'}}><Checkbox sx={{color:'color.main'}} /><Typography>In Transit</Typography></Stack>
-            <Stack direction='row' sx={{alignItems:'center',marginRight:'2rem'}}><Checkbox sx={{color:'color.main'}} /><Typography>Delivered</Typography></Stack>
+            <Stack direction='row' sx={{alignItems:'center',marginRight:'2rem'}}><Checkbox value={1} sx={{color:'color.main'}} defaultChecked onClick={OnCheckClicked}/><Typography>Pending</Typography></Stack>
+            <Stack direction='row' sx={{alignItems:'center',marginRight:'2rem'}}><Checkbox value={2} sx={{color:'color.main'}} onClick={OnCheckClicked}/><Typography>Confirmed</Typography></Stack>
+            <Stack direction='row' sx={{alignItems:'center',marginRight:'2rem'}}><Checkbox value={3} sx={{color:'color.main'}} onClick={OnCheckClicked}/><Typography>In Progress</Typography></Stack>
+            <Stack direction='row' sx={{alignItems:'center',marginRight:'2rem'}}><Checkbox value={4} sx={{color:'color.main'}} onClick={OnCheckClicked}/><Typography>Shipped</Typography></Stack>
+            <Stack direction='row' sx={{alignItems:'center',marginRight:'2rem'}}><Checkbox value={5} sx={{color:'color.main'}} onClick={OnCheckClicked}/><Typography>In Transit</Typography></Stack>
+            <Stack direction='row' sx={{alignItems:'center',marginRight:'2rem'}}><Checkbox value={6} sx={{color:'color.main'}} onClick={OnCheckClicked}/><Typography>Delivered</Typography></Stack>
           </Stack>
         </ThemeProvider>
       </Stack>
@@ -183,7 +183,7 @@ export default function ReactVirtualizedTable() {
         itemContent={rowContent}
       />
     </Paper>
-    </div> : null}
+    </div> :null}
     </div>
   );
 }

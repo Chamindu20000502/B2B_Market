@@ -1,4 +1,4 @@
-import "./Profile.css"
+import "./Account.css"
 import Navigation from "./Navigation";
 import Orders from "./Orders";
 import ToggleButton from '@mui/material/ToggleButton';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -7,8 +7,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { TableVirtuoso } from 'react-virtuoso';
-import Checkbox from '@mui/material/Checkbox';
-import { Typography } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
@@ -19,39 +17,40 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import axios from 'axios';
 
 const columns = [
   {
     width: 100,
     label: 'Item Name',
-    dataKey: 'itemName',
+    dataKey: 'name',
   },
   {
     width: 50,
     label: 'Quantity',
-    dataKey: 'quantity',
+    dataKey: 'qty',
     numeric: true,
   },
   {
     width: 100,
     label: 'Shop Name',
-    dataKey: 'shopName',
+    dataKey: 'company_name',
   },
   {
     width: 100,
     label: 'Order Number',
-    dataKey: 'orderNumber',
+    dataKey: 'order_number',
     numeric: true,
   },
   {
     width: 100,
     label: 'Ordered Data',
-    dataKey: 'orderedDate',
+    dataKey: 'placed_date',
   },
   {
     width: 100,
     label: 'Total Price',
-    dataKey: 'totalPrice',
+    dataKey: 'price',
     numeric: true,
   },
   {
@@ -115,50 +114,96 @@ function rowContent(_index, row) {
 }
 
 export default function ToReview() {
-  const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(null);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [data, setData] = useState(null);
+  const [reviewData, setReviewData] = useState({});
 
-  const handleClickOpen = () => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(import.meta.env.VITE_API + `/account/1/buy/reviews`);
+        setData(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+    fetchData();
+  },[]);
+
+
+  let modifiedData = [];
+  if(data)
+  {
+    for (let i = 0; i < data.length; i++) {
+      if(data[i].status_id === 6)
+      {
+        modifiedData.push(
+          {
+            name: data[i].name,
+            qty: data[i].qty,
+            company_name: data[i].company_name,
+            order_number: data[i].order_number,
+            placed_date: data[i].placed_date,
+            price: data[i].price,
+            button: <Button size='small' variant="contained" value={data[i].order_number} onClick={handleClickOpen}>
+              Review
+            </Button>
+          });
+      }else {
+        modifiedData.push(
+          {
+            name: data[i].name,
+            qty: data[i].qty,
+            company_name: data[i].company_name,
+            order_number: data[i].order_number,
+            placed_date: data[i].placed_date,
+            price: data[i].price,
+            button: 'Reviewed'
+          });
+        }
+    }
+  }
+
+  function handleClickOpen(event) {
     setOpen(true);
-  };
+    setReviewData({order_number: event.target.value});
+    console.log(reviewData);
+  }
 
-  const handleClose = () => {
+  function OnReview(event)
+  {
+    if(event.target.name === 'review')
+    {
+      setReviewData((previousValue) => {
+        return {...previousValue, review: event.target.value};
+      });
+    }else if(event.target.name === 'rating')
+    {
+      setValue(event.target.value);
+      setReviewData((previousValue) => {
+        return {...previousValue, rating: event.target.value};
+      });
+    }
+    console.log(reviewData);
+  }
+
+  function handleClose()
+  {
     setOpen(false);
-  };
-
-  const rows = [
-  {
-    itemName: 'Item 1',
-    quantity: 2,
-    shopName: 'Shop A',
-    orderNumber: 12345,
-    orderedDate: '2023-10-01',
-    totalPrice: 50.00,
-    button: <Button size='small' variant="contained" onClick={handleClickOpen}>
-        Review
-      </Button>
-  },
-  {
-    itemName: 'Item 2',
-    quantity: 1,
-    shopName: 'Shop B',
-    orderNumber: 12346,
-    orderedDate: '2023-10-02',
-    totalPrice: 30.00,
-    button: <Button size='small' variant="contained" onClick={handleClickOpen}>
-        Review
-      </Button>
-  },
-];
+    setReviewData({});
+    setValue(0);
+  }
 
   return (
-    <div>
+    <div>{data?<div>
       <Stack direction='row' sx={{alignItems:'center'}}>
         <Paper elevation={2} sx={{backgroundColor:'#4169E1',color:'white',padding:'0rem'}}><h2 style={{marginRight:'1rem',marginLeft:'1rem'}}>To Review</h2></Paper>
       </Stack>
     <Paper style={{ height: '30rem', width: '100%' }}>
       <TableVirtuoso
-        data={rows}
+        data= {modifiedData}
         components={VirtuosoTableComponents}
         fixedHeaderContent={fixedHeaderContent}
         itemContent={rowContent}
@@ -194,20 +239,21 @@ export default function ToReview() {
           </DialogContentText>
           <Rating
           sx={{marginTop: '2rem'}}
-        name="simple-controlled"
+        name="rating"
         value={value}
-        onChange={(event, newValue) => {
-          setValue(newValue);
-        }}
+        onChange={OnReview}
       />
           <TextField
             autoFocus
             required
+            name='review'
+            value={reviewData.review || ''}
             margin="dense"
             id="name"
             label="Review"
             fullWidth
             variant="standard"
+            onChange={OnReview}
           />
         </DialogContent>
         <DialogActions>
@@ -216,6 +262,6 @@ export default function ToReview() {
         </DialogActions>
       </Dialog>
     </React.Fragment>
-    </div>
+    </div> : null}</div>
   );
 }

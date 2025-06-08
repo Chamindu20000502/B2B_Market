@@ -168,14 +168,29 @@ app.post("/register",async(req,res)=>{
   });
 });
 
-app.get("/account/:id/:status_id", async(req,res)=>{
+app.get("/account/:id/buy/orders/:status_id", async(req,res)=>{
   const id = req.params.id;
   const status_list = req.params.status_id.split(",");
-  console.log('status_list : ' + status_list);
+  var status_list_int = [];
+  for(var i = 0; i < status_list.length; i++)
+  {
+    status_list_int.push(parseInt(status_list[i]));
+  }
+
   var details = [];
   try
   {
-    const response = await db.query('select * from orders inner join order_status on orders.status_id = order_status.status_id inner join payment_method on orders.pay_method_id = payment_method.id where buyer_id = $1',[id]);
+    var quary = 'select * from orders inner join order_status on orders.status_id = order_status.status_id inner join payment_method on orders.pay_method_id = payment_method.id where buyer_id = $1 and orders.status_id in (';
+    for(var i = 0; i < status_list_int.length; i++)
+    {
+      if(i !== 0)
+      {
+        quary += ',';
+      }
+      quary += status_list_int[i];
+    }
+    quary += ')';
+    const response = await db.query(quary,[id]);
     
     if(response.rowCount === 1)
     {
@@ -211,7 +226,40 @@ app.get("/account/:id/:status_id", async(req,res)=>{
 
   }catch(err)
   {
-    console.log('ERROR : ' + err);
+    console.log(err);
+  }
+});
+
+app.get("/account/:id/buy/reviews", async(req,res)=>{
+  const id = req.params.id;
+
+  try
+  {
+    const response = await db.query('select order_number, seller_id, qty, status_id, placed_date, price , company_name , name from orders inner join client on client.id = orders.seller_id inner join product on product.product_id = orders.product_id where buyer_id = $1 and status_id in (6,7)',[id]);
+    res.json(response.rows);
+  }catch(err)
+  {
+    console.log('ERROR (reviews) : ' + err);
+    console.log('Failed to fetch reviews for buyer ID: ' + id);
+  }
+});
+
+app.post("/account/:id/buy/reviews", async(req,res)=>{
+  const id = req.params.id;
+  const rate = req.body.rate;
+  const description = req.body.description;
+  const product_id = req.body.product_id;
+
+  try
+  {
+    await db.query('insert into product_reviews (buyer_id, product_id, description, rate) values($1,$2,$3,$4)',[
+      id, product_id, description, rate
+    ]);
+    res.json({status: "success", message: "Review submitted successfully!"});
+  }catch(err)
+  {
+    console.log('ERROR (review) : ' + err);
+    res.json({status: "error", message: "Failed to submit review. Please try again later."});
   }
 });
 

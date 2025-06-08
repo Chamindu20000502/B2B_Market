@@ -124,7 +124,7 @@ export default function ReactVirtualizedTable() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(import.meta.env.VITE_API+`/account/1/${status_list}`);
+        const response = await axios.get(import.meta.env.VITE_API+`/account/1/buy/orders/${status_list}`);
         setData(response.data);
       } catch (error) {
         console.error(error.message);
@@ -146,11 +146,10 @@ export default function ReactVirtualizedTable() {
 
     setStatusList(newStatusList);
 
-    console.log(newStatusList);
     if (newStatusList.length !== 0) {
       try
       {
-        const response = await axios.get(import.meta.env.VITE_API+`/account/1/${newStatusList}`);
+        const response = await axios.get(import.meta.env.VITE_API+`/account/1/buy/orders/${newStatusList}`);
         setData(response.data);
       }catch (error) {
         console.error(error.message);

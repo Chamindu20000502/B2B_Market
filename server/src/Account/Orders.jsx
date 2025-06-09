@@ -186,11 +186,3 @@ export default function ReactVirtualizedTable() {
     </div>
   );
 }
-
-
-
-
-
-
-
-

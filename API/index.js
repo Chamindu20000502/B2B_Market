@@ -246,15 +246,26 @@ app.get("/account/:id/buy/reviews", async(req,res)=>{
 
 app.post("/account/:id/buy/reviews", async(req,res)=>{
   const id = req.params.id;
-  const rate = req.body.rate;
-  const description = req.body.description;
-  const product_id = req.body.product_id;
+  const rate = req.body.rating;
+  const description = req.body.review;
+  var product_id = null;
+  const order_number = req.body.order_number;
+
+  try
+  {
+    const response = await db.query('select product_id from orders where order_number = $1',[order_number]);
+    product_id = response.rows[0].product_id;
+  }catch(err)
+  {
+    console.log('ERROR (fetching product_id) : ' + err);
+  }
 
   try
   {
     await db.query('insert into product_reviews (buyer_id, product_id, description, rate) values($1,$2,$3,$4)',[
       id, product_id, description, rate
     ]);
+    await db.query('update orders set status_id = 7 where order_number = $1',[order_number]);
     res.json({status: "success", message: "Review submitted successfully!"});
   }catch(err)
   {

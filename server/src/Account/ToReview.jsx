@@ -18,6 +18,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import axios from 'axios';
+import Alert from '@mui/material/Alert';
 
 const columns = [
   {
@@ -118,6 +119,7 @@ export default function ToReview() {
   const [value, setValue] = useState(null);
   const [data, setData] = useState(null);
   const [reviewData, setReviewData] = useState({});
+  const [isShowWarnig, setIsShowWarning] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -133,7 +135,7 @@ export default function ToReview() {
   },[]);
 
 
-  let modifiedData = [];
+  let modifiedData = [];  
   if(data)
   {
     for (let i = 0; i < data.length; i++) {
@@ -186,7 +188,33 @@ export default function ToReview() {
         return {...previousValue, rating: event.target.value};
       });
     }
+    setIsShowWarning(false);
     console.log(reviewData);
+  }
+
+  async function HandleSubmit()
+  {
+    if(reviewData.rating)
+    {
+      handleClose();
+      try
+      {
+        const response = await axios.post(import.meta.env.VITE_API + `/account/1/buy/reviews`, reviewData);
+        try {
+          const response = await axios.get(import.meta.env.VITE_API + `/account/1/buy/reviews`);
+          setData(response.data);
+          console.log(response.data);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      }catch (error)
+      {
+        console.error('Error submitting review:', error);
+      }
+    }else
+    {
+      setIsShowWarning(true);
+    }
   }
 
   function handleClose()
@@ -225,25 +253,27 @@ export default function ToReview() {
               event.preventDefault();
               const formData = new FormData(event.currentTarget);
               const formJson = Object.fromEntries(formData.entries());
-              const email = formJson.email;
-              console.log(email);
-              handleClose();
+              HandleSubmit();
             },
           },
         }}
       >
         <DialogTitle>Help others in your industry — share your experience.</DialogTitle>
         <DialogContent>
-          <DialogContentText>
+          <DialogContentText sx={{marginBottom:'1rem'}}>
             Your feedback on [Product Name] can help fellow professionals make informed decisions. Please share your review below.
           </DialogContentText>
+
+          {isShowWarnig ?<Alert variant="outlined" severity="warning">We’d appreciate it if you could rate your experience.</Alert> : null}
+
           <Rating
-          sx={{marginTop: '2rem'}}
+          sx={{marginTop:'1rem'}}
         name="rating"
         value={value}
         onChange={OnReview}
       />
           <TextField
+          autoComplete='off'
             autoFocus
             required
             name='review'

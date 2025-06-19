@@ -115,6 +115,7 @@ function rowContent(_index, row) {
 }
 
 export default function ToReview() {
+  const userId = 1; // Replace with actual user ID if needed
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [data, setData] = useState(null);
@@ -124,7 +125,7 @@ export default function ToReview() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(import.meta.env.VITE_API + `/account/1/buy/reviews`);
+        const response = await axios.get(import.meta.env.VITE_API + `/account/${userId}/buy/reviews`);
         setData(response.data);
         console.log(response.data);
       } catch (error) {
@@ -199,9 +200,9 @@ export default function ToReview() {
       handleClose();
       try
       {
-        const response = await axios.post(import.meta.env.VITE_API + `/account/1/buy/reviews`, reviewData);
+        const response = await axios.post(import.meta.env.VITE_API + `/account/${userId}/buy/reviews`, reviewData);
         try {
-          const response = await axios.get(import.meta.env.VITE_API + `/account/1/buy/reviews`);
+          const response = await axios.get(import.meta.env.VITE_API + `/account/${userId}/buy/reviews`);
           setData(response.data);
           console.log(response.data);
         } catch (error) {

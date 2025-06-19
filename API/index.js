@@ -1,4 +1,4 @@
-import express from "express";
+import express, { response } from "express";
 import env from "dotenv";
 import pg from "pg";
 import bodyParser from "body-parser";
@@ -271,6 +271,19 @@ app.post("/account/:id/buy/reviews", async(req,res)=>{
   {
     console.log('ERROR (review) : ' + err);
     res.json({status: "error", message: "Failed to submit review. Please try again later."});
+  }
+});
+
+app.get("/account/:id/buy/review_count",async(req,res)=>{
+  const id = req.params.id;
+  try
+  {
+    const response = await db.query('select count (status_id) from orders where buyer_id = $1 and status_id = 6',[id]);
+    res.send(parseInt(response.rows[0].count));
+  }catch(err)
+  {
+    res.send(0);
+    console.log(err);
   }
 });
 

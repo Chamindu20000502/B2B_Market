@@ -1,7 +1,7 @@
 #grid
 {
     display: grid;
-    grid-template-columns: repeat(10, 1fr);
+    grid-template-columns: repeat(12, 1fr);
     margin-left: 2.5rem;
     margin-right: 2.5rem;
     margin-top: 1rem;
@@ -9,11 +9,11 @@
 
 #carousel
 {
-    grid-column :span 6;
+    grid-column :span 7;
 }
 #customizable-area
 {
-    grid-column: span 4;
+    grid-column: span 5;
     grid-row: span 2;
 }
 
@@ -47,7 +47,7 @@
 
 #product-info
 {
-    grid-column: span 5;
+    grid-column: span 6;
     margin-top: 2rem;
 }
 
@@ -60,7 +60,7 @@
 
 #description
 {
-    grid-column: span 5;
+    grid-column: span 6;
     margin-top: 2rem;
 }
 
@@ -72,7 +72,7 @@
 
 #ratings
 {
-    grid-column: span 10;
+    grid-column: span 12;
     margin-top: 3rem;
 }
 

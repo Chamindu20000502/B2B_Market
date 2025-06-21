@@ -29,3 +29,10 @@
 {
     grid-column: span 12;
 }
+
+#my-products
+{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}

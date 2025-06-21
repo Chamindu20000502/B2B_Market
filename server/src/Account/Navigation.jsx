@@ -13,7 +13,7 @@ import Badge from '@mui/material/Badge';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 
-const cards = [
+const buyCards = [
   {
     icon : <DashboardIcon sx={{ fontSize: 30}} />,
     title: 'Dashboard',
@@ -21,6 +21,21 @@ const cards = [
   {
     icon : <ViewListIcon sx={{ fontSize: 30}} />,
     title: 'Orders',
+  },
+  {
+    icon : <RateReviewIcon sx={{ fontSize: 30}} />,
+    title: 'To Review',
+  },
+];
+
+const sellCards = [
+  {
+    icon : <DashboardIcon sx={{ fontSize: 30}} />,
+    title: 'Dashboard',
+  },
+  {
+    icon : <ViewListIcon sx={{ fontSize: 30}} />,
+    title: 'My products',
   },
   {
     icon : <RateReviewIcon sx={{ fontSize: 30}} />,
@@ -53,10 +68,16 @@ function Navigation(props) {
     fetchData();
   },[]);
 
-    function OnCardClick(index)
+    function OnBuyCardClick(index)
     {
         setSelectedCard(index);
-        props.onNavChange(cards[index].title);
+        props.onNavChange(buyCards[index].title);
+    }
+
+    function OnSellCardClick(index)
+    {
+        setSelectedCard(index);
+        props.onNavChange(sellCards[index].title);
     }
 
   return (
@@ -68,10 +89,10 @@ function Navigation(props) {
         gap: 2,
       }}
     >
-      {cards.map((card, index) => (
+      {props.mode === 'buy' ? buyCards.map((card, index) => (
         <Card>
           <CardActionArea
-            onClick={() => OnCardClick(index)}
+            onClick={() => OnBuyCardClick(index)}
             data-active={selectedCard === index ? '' : undefined}
             sx={{
               height: '100%',
@@ -87,6 +108,33 @@ function Navigation(props) {
             <CardContent sx={{ height: '100%' ,padding:0,paddingTop:2, paddingBottom:1}}>
                 <Stack sx={{alignItems:'center',justifyContent:'center',justifyItems:'center'}}>
                 <ThemeProvider theme={badgeTheme}>{card.title === 'To Review' ? <Badge badgeContent={toRateCount} color='primary'>{card.icon}</Badge> : card.icon}</ThemeProvider>
+              <Typography variant="body2" color="text.secondary">
+                {card.title}
+              </Typography>
+              </Stack>
+            </CardContent>
+          </CardActionArea>
+        </Card>
+      )) : 
+      sellCards.map((card, index) => (
+        <Card>
+          <CardActionArea
+            onClick={() => OnSellCardClick(index)}
+            data-active={selectedCard === index ? '' : undefined}
+            sx={{
+              height: '100%',
+              '&[data-active]': {
+                backgroundColor: 'action.selected',
+                '&:hover': {
+                  backgroundColor: 'action.selectedHover',
+                },
+              },
+            }}
+          >
+            
+            <CardContent sx={{ height: '100%' ,padding:0,paddingTop:2, paddingBottom:1}}>
+                <Stack sx={{alignItems:'center',justifyContent:'center',justifyItems:'center'}}>
+                {card.icon}
               <Typography variant="body2" color="text.secondary">
                 {card.title}
               </Typography>

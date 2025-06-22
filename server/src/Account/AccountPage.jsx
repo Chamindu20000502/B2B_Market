@@ -9,6 +9,7 @@ import ToReview from "./ToReview";
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MyProducts from "./MyProducts";
+import SellDash from "./SellDash";
 
 export default function ProfilePage()
 {
@@ -98,7 +99,7 @@ function ContentPage(props)
 {
     switch(props.page)
     {
-        case 'dashboard':
+        case 'buy dashboard':
             return <BuyDash/>;
         case 'orders':
             return <Orders/>;
@@ -106,5 +107,7 @@ function ContentPage(props)
             return <ToReview/>;
         case 'my products':
             return <MyProducts/>;
+        case 'sell dashboard':
+            return <SellDash/>;
     }
 }

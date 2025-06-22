@@ -16,7 +16,7 @@ import axios from 'axios';
 const buyCards = [
   {
     icon : <DashboardIcon sx={{ fontSize: 30}} />,
-    title: 'Dashboard',
+    title: 'Buy Dashboard',
   },
   {
     icon : <ViewListIcon sx={{ fontSize: 30}} />,
@@ -31,7 +31,7 @@ const buyCards = [
 const sellCards = [
   {
     icon : <DashboardIcon sx={{ fontSize: 30}} />,
-    title: 'Dashboard',
+    title: 'Sell Dashboard',
   },
   {
     icon : <ViewListIcon sx={{ fontSize: 30}} />,

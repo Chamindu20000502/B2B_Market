@@ -1,4 +1,4 @@
-import express, { response } from "express";
+import express from "express";
 import env from "dotenv";
 import pg from "pg";
 import bodyParser from "body-parser";
@@ -284,6 +284,31 @@ app.get("/account/:id/buy/review_count",async(req,res)=>{
   {
     res.send(0);
     console.log(err);
+  }
+});
+
+app.get("/account/:id/sell/my_products", async(req,res)=>{
+  const id = req.params.id;
+  var details = [];
+  try
+  {
+    const response = await db.query('select product_id, product.name, description, store_id, catagory.name as catagory from product inner join catagory on product.catagory = catagory.id where store_id = $1',[id]);
+    for(var i = 0; i < response.rowCount; i++)
+    {
+      try
+      {
+        const response_2 = await db.query('select min(price), max(price) from price_ranges where product_id = $1',[response.rows[i].product_id]);
+        details.push({...response.rows[i],...response_2.rows[0]});
+      }catch(err)
+      {
+        console.log('ERROR (my_products) : ' + err);
+      }
+    }
+    res.json(details);
+  }catch(err)
+  {
+    console.log('ERROR (my_products) : ' + err);
+    res.json([]);
   }
 });
 

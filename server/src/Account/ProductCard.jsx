@@ -39,7 +39,7 @@ const ExpandMore = styled((props) => {
   ],
 }));
 
-export default function ProductCard() {
+export default function ProductCard(props) {
 
   return (
     <Card sx={{ maxWidth: 240 }}>
@@ -49,8 +49,8 @@ export default function ProductCard() {
             <MoreVertIcon />
           </IconButton>
         }
-        title={<Typography variant="h6" component="div">Paella</Typography>}
-        subheader="September 14, 2016"
+        title={<Typography variant="h6" component="div">{props.info.name}</Typography>}
+        subheader={props.info.catagory}
       />
       <CardMedia
         component="img"
@@ -60,7 +60,7 @@ export default function ProductCard() {
       />
       <CardContent>
         <Typography variant="h5" sx={{ color: 'text.secondary' }}>
-          1000$ - 500$
+          {props.info.max}$ - {props.info.min}$
         </Typography>
       </CardContent>
       <CardActions disableSpacing>

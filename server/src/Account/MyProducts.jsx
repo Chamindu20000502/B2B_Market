@@ -9,7 +9,7 @@ import { useState, useEffect, use } from "react";
 
 const userId = 200; // Replace with dynamic user ID if needed
 
-export default function MyProducts() {
+export default function MyProducts(props) {
     const [data, setData] = useState(null);
 
     useEffect(() => {
@@ -32,7 +32,7 @@ export default function MyProducts() {
             {data ? <div>
                 <Stack direction="row" spacing={2} sx={{ mb: 2 ,justifyContent: 'space-between',pr:5}}>
                 <Paper elevation={2} sx={{backgroundColor:'#36454F',color:'white',padding:'0rem'}}><h2 style={{marginRight:'1rem',marginLeft:'1rem'}}>My Products</h2></Paper>
-                <Fab variant="extended" color="primary" sx={{backgroundColor:'#36454F',color:'white'}}>
+                <Fab variant="extended" color="primary" sx={{backgroundColor:'#36454F',color:'white'}} onClick={props.addProduct}>
                     <AddIcon sx={{ mr: 1 }} />
                     Add Product
                 </Fab>

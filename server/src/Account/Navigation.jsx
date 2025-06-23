@@ -15,31 +15,31 @@ import axios from 'axios';
 
 const buyCards = [
   {
-    icon : <DashboardIcon sx={{ fontSize: 30}} />,
+    icon : <DashboardIcon sx={{ fontSize: 25}} />,
     title: 'Buy Dashboard',
   },
   {
-    icon : <ViewListIcon sx={{ fontSize: 30}} />,
+    icon : <ViewListIcon sx={{ fontSize: 25}} />,
     title: 'Orders',
   },
   {
-    icon : <RateReviewIcon sx={{ fontSize: 30}} />,
+    icon : <RateReviewIcon sx={{ fontSize: 25}} />,
     title: 'To Review',
   },
 ];
 
 const sellCards = [
   {
-    icon : <DashboardIcon sx={{ fontSize: 30}} />,
+    icon : <DashboardIcon sx={{ fontSize: 25}} />,
     title: 'Sell Dashboard',
   },
   {
-    icon : <ViewListIcon sx={{ fontSize: 30}} />,
+    icon : <ViewListIcon sx={{ fontSize: 25}} />,
     title: 'My products',
   },
   {
-    icon : <RateReviewIcon sx={{ fontSize: 30}} />,
-    title: 'To Review',
+    icon : <RateReviewIcon sx={{ fontSize: 25}} />,
+    title: 'Orders',
   },
 ];
 
@@ -106,7 +106,7 @@ function Navigation(props) {
           >
             
             <CardContent sx={{ height: '100%' ,padding:0,paddingTop:2, paddingBottom:1}}>
-                <Stack sx={{alignItems:'center',justifyContent:'center',justifyItems:'center'}}>
+                <Stack direction={"row"} gap={2} sx={{alignItems:'center',justifyItems:'center',paddingLeft:2}}>
                 <ThemeProvider theme={badgeTheme}>{card.title === 'To Review' ? <Badge badgeContent={toRateCount} color='primary'>{card.icon}</Badge> : card.icon}</ThemeProvider>
               <Typography variant="body2" color="text.secondary">
                 {card.title}
@@ -133,7 +133,7 @@ function Navigation(props) {
           >
             
             <CardContent sx={{ height: '100%' ,padding:0,paddingTop:2, paddingBottom:1}}>
-                <Stack sx={{alignItems:'center',justifyContent:'center',justifyItems:'center'}}>
+                <Stack direction={"row"} gap={2} sx={{alignItems:'center',justifyItems:'center',paddingLeft:2}}>
                 {card.icon}
               <Typography variant="body2" color="text.secondary">
                 {card.title}

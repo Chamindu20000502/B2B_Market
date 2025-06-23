@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MyProducts from "./MyProducts";
 import SellDash from "./SellDash";
+import AddProduct from "./AddProduct";
 
 export default function ProfilePage()
 {
@@ -54,7 +55,7 @@ export default function ProfilePage()
 
 function BuyContent()
 {
-    const [page , setPage] = useState('dashboard');
+    const [page , setPage] = useState('buy dashboard');
 
     function OnNavChange(page)
     {
@@ -75,11 +76,16 @@ function BuyContent()
 
 function SellContent()
 {
-    const [page , setPage] = useState('dashboard');
+    const [page , setPage] = useState('sell dashboard');
 
     function OnNavChange(page)
     {
         setPage(page.toLowerCase());
+    }
+
+    function OnAddProduct()
+    {
+        setPage('add product');
     }
 
     return(
@@ -88,7 +94,7 @@ function SellContent()
                     <Navigation onNavChange={OnNavChange} mode='sell'/>
                 </div>
                 <div id="content">
-                    <ContentPage page={page}/>
+                    <ContentPage page={page} addProduct={OnAddProduct}/>
                 </div>
         </div>
     );
@@ -106,8 +112,10 @@ function ContentPage(props)
         case 'to review':
             return <ToReview/>;
         case 'my products':
-            return <MyProducts/>;
+            return <MyProducts addProduct={props.addProduct}/>;
         case 'sell dashboard':
             return <SellDash/>;
+        case 'add product':
+            return <AddProduct/>;
     }
 }

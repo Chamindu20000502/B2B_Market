@@ -1,105 +1,150 @@
 import * as React from 'react';
+import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
+import ButtonBase from '@mui/material/ButtonBase';
 import Typography from '@mui/material/Typography';
-import CardActionArea from '@mui/material/CardActionArea';
-import DevicesIcon from '@mui/icons-material/Devices';
-import ChairIcon from '@mui/icons-material/Chair';
-import DryCleaningIcon from '@mui/icons-material/DryCleaning';
-import DiamondIcon from '@mui/icons-material/Diamond';
-import HandymanIcon from '@mui/icons-material/Handyman';
-import CarCrashIcon from '@mui/icons-material/CarCrash';
-import SmartToyIcon from '@mui/icons-material/SmartToy';
-import SoupKitchenIcon from '@mui/icons-material/SoupKitchen';
-import Slide from '@mui/material/Slide';
 
-const cards = [
+const images = [
   {
-    icon: <DevicesIcon style={{fontSize:"3rem"}}/>,
+    url: 'https://chennai.vit.ac.in/wp-content/uploads/2021/09/What-is-Electronics-Engineering-Difference-Between-Electrical-and-Electronics-Engineering.jpg',
     title: 'Electronics',
-    description: 'Plants are essential for all life.',
+    width: '25%',
   },
   {
-    icon: <ChairIcon style={{fontSize:"3rem"}}/>,
+    url: 'https://jdelite.decoratingden.com/wp-content/uploads/sites/368/2023/11/jdeliteinteriors-does-interior-design-include-furniture-04-scaled.jpg',
     title: 'Furniture',
-    description: 'Animals are a part of nature.',
+    width: '25%',
   },
   {
-    icon: <DryCleaningIcon style={{fontSize:"3rem"}}/>,
+    url: 'https://www.hemswell-antiques.com/images/uploads/blog_images/c48297806d52d413ff70520b143a92492dd3c02b_bEu7.jpeg',
     title: 'Clothing',
-    description: 'Humans depend on plants and animals for survival.',
+    width: '25%',
   },
   {
-    icon: <DiamondIcon style={{fontSize:"3rem"}}/>,
+    url: 'https://images.squarespace-cdn.com/content/v1/5984f3d103596ea150c48006/1512166175752-1LSM80BFZA1E1RAM4671/gold.jpg',
     title: 'Jewellery',
-    description: 'Humans depend on plants and animals for survival.',
+    width: '25%',
   },
   {
-    icon: <HandymanIcon style={{fontSize:"3rem"}}/>,
+    url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWY4FLVBY4YxFKNHXytgZ0nfT3TW6xlEII4Q&s',
     title: 'Tools',
-    description: 'Humans depend on plants and animals for survival.',
+    width: '25%',
   },
   {
-    icon: <CarCrashIcon style={{fontSize:"3rem"}}/>,
+    url: 'https://media.istockphoto.com/id/1212230930/photo/car-engine-parts.jpg?s=612x612&w=0&k=20&c=YCG4lzjxDYTFQQ-gOniW-r-Xl-th73hBOrcnvdiU274=',
     title: 'Spare Parts',
-    description: 'Humans depend on plants and animals for survival.',
+    width: '25%',
   },
   {
-    icon: <SmartToyIcon style={{fontSize:"3rem"}}/>,
+    url: 'https://www.teachearlyyears.com/images/uploads/article/Early_Years_toys.png',
     title: 'Toys',
-    description: 'Humans depend on plants and animals for survival.',
+    width: '25%',
   },
   {
-    icon: <SoupKitchenIcon style={{fontSize:"3rem"}}/>,
+    url: 'https://media.hswstatic.com/eyJidWNrZXQiOiJjb250ZW50Lmhzd3N0YXRpYy5jb20iLCJrZXkiOiJnaWZcL3NlYXNvbmluZ3MuanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo4Mjh9fX0=',
     title: 'Seasonal Items',
-    description: 'Electronics are devices that operate on electrical energy.',
-  }
+    width: '25%',
+  },
 ];
 
-function CatagoriesArea() {
-  const [selectedCard, setSelectedCard] = React.useState(0);
-  return (
-    <div style={{backgroundColor:'#2a52be'}}>
-        <Box className="container"
-      sx={{
-        width: '100%',
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(min(20rem, 100%), 1fr))',
-        gap: 2,
-        p:{xs:2 , md:4 , lg:12}
-      }}
-    >{cards.map((card,index) =>{
-        return(
-            <Slide key={index} direction="up" in={true} mountOnEnter unmountOnExit>
-        <Card raised={selectedCard === index? true :false} style={{margin:"1rem"}}>
-          <CardActionArea
-            onMouseOver={() => setSelectedCard(index)}
-            sx={{
-              height: '100%',
-              backgroundColor: '#000f89',
-            }}
-          >
-            <CardContent sx={{ height: '100%' }}>
-              <Typography style={{color:'white'}} variant="h5" component="div">
-                {card.icon}   {card.title}
-              </Typography>
-              <Typography style={{color:'white'}} variant="body2" color="text.secondary">
-                {card.description}
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-        </Card>
-        </Slide>
-        );
-    })}
-        
-        
+const ImageButton = styled(ButtonBase)(({ theme }) => ({
+  position: 'relative',
+  height: 200,
+  [theme.breakpoints.down('sm')]: {
+    width: '100% !important', // Overrides inline-style
+    height: 100,
+  },
+  '&:hover, &.Mui-focusVisible': {
+    zIndex: 1,
+    '& .MuiImageBackdrop-root': {
+      opacity: 0.15,
+    },
+    '& .MuiImageMarked-root': {
+      opacity: 0,
+    },
+    '& .MuiTypography-root': {
+      border: '4px solid currentColor',
+    },
+  },
+}));
 
-        
+const ImageSrc = styled('span')({
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0,
+  backgroundSize: 'cover',
+  backgroundPosition: 'center 40%',
+});
+
+const Image = styled('span')(({ theme }) => ({
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: theme.palette.common.white,
+}));
+
+const ImageBackdrop = styled('span')(({ theme }) => ({
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0,
+  backgroundColor: theme.palette.common.black,
+  opacity: 0.4,
+  transition: theme.transitions.create('opacity'),
+}));
+
+const ImageMarked = styled('span')(({ theme }) => ({
+  height: 3,
+  width: 18,
+  backgroundColor: theme.palette.common.white,
+  position: 'absolute',
+  bottom: -2,
+  left: 'calc(50% - 9px)',
+  transition: theme.transitions.create('opacity'),
+}));
+
+export default function CatagoriesArea() {
+  return (
+    <Box sx={{ display: 'flex', flexWrap: 'wrap', minWidth: 300, width: '100%' }}>
+      {images.map((image) => (
+        <ImageButton
+          focusRipple
+          key={image.title}
+          style={{
+            width: image.width,
+          }}
+        >
+          <ImageSrc style={{ backgroundImage: `url(${image.url})` }} />
+          <ImageBackdrop className="MuiImageBackdrop-root" />
+          <Image>
+            <Typography
+              component="span"
+              variant="subtitle1"
+              color="inherit"
+              fontSize={'2.5rem'}
+              sx={(theme) => ({
+                fontWeight: '900',
+                position: 'relative',
+                p: 4,
+                pt: 2,
+                pb: `calc(${theme.spacing(1)} + 6px)`,
+              })}
+            >
+              {image.title}
+              <ImageMarked className="MuiImageMarked-root" />
+            </Typography>
+          </Image>
+        </ImageButton>
+      ))}
     </Box>
-    </div>
   );
 }
 
-export default CatagoriesArea;

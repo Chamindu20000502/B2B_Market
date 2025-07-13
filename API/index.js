@@ -3,6 +3,7 @@ import env from "dotenv";
 import pg from "pg";
 import bodyParser from "body-parser";
 import bcrypt from 'bcrypt';
+import multer from "multer";
 
 env.config();
 
@@ -17,7 +18,16 @@ const db = new pg.Client({
   port: process.env.DB_PORT
 });
 
-console.log(saltRounds);
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, process.env.PRODUCT_IMAGES_PATH ); // Folder to save files
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  }
+});
+
+const upload = multer({ storage: storage });
 
 app.use(bodyParser.urlencoded({extended:true}));
 
@@ -310,6 +320,11 @@ app.get("/account/:id/sell/my_products", async(req,res)=>{
     console.log('ERROR (my_products) : ' + err);
     res.json([]);
   }
+});
+
+app.post("/account/:id/sell/add_product", upload.single('thumbnail') , async(req,res)=>{
+  console.log('File uploaded successfully!');
+  res.send('File uploaded successfully!');
 });
 
 app.listen(PORT, () => {

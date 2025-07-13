@@ -49,7 +49,7 @@ export default function RegisterPage()
     {
         try
         {
-            const response = await axios.post('http://localhost:3000/register',formData);
+            const response = await axios.post(import.meta.env.VITE_API+'/register',formData);
             setError({isError:true,message:response.data});
         }catch(err)
         {

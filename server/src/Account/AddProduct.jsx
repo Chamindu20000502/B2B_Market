@@ -3,8 +3,29 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
+import { useState } from 'react';
+import axios from 'axios';
+import { Form } from 'react-router-dom';
 
 export default function AddProduct() {
+  const [formData, setFormData] = useState({});
+
+  const file = new FormData();
+
+  function SetFileData(event) {
+    file.append(event.target.name, event.target.files[0]);
+  }
+
+  async function SendData()
+  {
+    await axios.post(import.meta.env.VITE_API + '/account/1/sell/add_product', file);
+  }
+
+  function onSubmit(event) {
+    SendData();
+    event.preventDefault();
+  }
+
     return (
         <div>
             <Stack direction="row" spacing={2} sx={{ mb: 2 ,justifyContent: 'space-between',pr:5}}>
@@ -13,7 +34,9 @@ export default function AddProduct() {
             
         
 
-        <Grid container spacing={2}>
+        
+      <form action="/account/1/sell/add_product" method='post'>
+      <Grid container spacing={2}>
         <Grid size={3}>
           Product name
         </Grid>
@@ -44,6 +67,9 @@ export default function AddProduct() {
         />
         </Grid>
       </Grid>
+        <input type="file" name='thumbnail' onChange={SetFileData}/>
+        <button type='submit' onClick={onSubmit}>submit</button>
+      </form>
         </div>
     );
 }

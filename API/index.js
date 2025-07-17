@@ -4,6 +4,7 @@ import pg from "pg";
 import bodyParser from "body-parser";
 import bcrypt from 'bcrypt';
 import multer from "multer";
+import fs from "fs";
 
 env.config();
 
@@ -20,8 +21,17 @@ const db = new pg.Client({
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, process.env.PRODUCT_IMAGES_PATH ); // Folder to save files
-  },
+    const folderName = req.params.id;
+    if(file.fieldname === 'thumbnail')
+    {
+      fs.mkdirSync(process.env.PRODUCT_IMAGES_PATH + folderName + '/thumbnail', { recursive: true });
+      cb(null, process.env.PRODUCT_IMAGES_PATH + folderName + '/thumbnail'); // Folder to save files
+    }else if(file.fieldname === 'images')
+    {
+      fs.mkdirSync(process.env.PRODUCT_IMAGES_PATH + folderName + '/images', { recursive: true });
+      cb(null, process.env.PRODUCT_IMAGES_PATH + folderName + '/images'); // Folder to save files
+  }
+},
   filename: function (req, file, cb) {
     cb(null, file.originalname);
   }
@@ -322,7 +332,7 @@ app.get("/account/:id/sell/my_products", async(req,res)=>{
   }
 });
 
-app.post("/account/:id/sell/add_product", upload.single('thumbnail') , async(req,res)=>{
+app.post("/account/:id/sell/add_product", upload.fields([{name:'thumbnail', maxCount :1},{name:'images', maxCount:10}]), async(req,res)=>{
   console.log('File uploaded successfully!');
   res.send('File uploaded successfully!');
 });

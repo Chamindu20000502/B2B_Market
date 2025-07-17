@@ -5,7 +5,6 @@ import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 import axios from 'axios';
-import { Form } from 'react-router-dom';
 
 export default function AddProduct() {
   const [formData, setFormData] = useState({});
@@ -13,7 +12,13 @@ export default function AddProduct() {
   const file = new FormData();
 
   function SetFileData(event) {
-    file.append(event.target.name, event.target.files[0]);
+    if(event.target.name === 'thumbnail') {
+      file.append('thumbnail', event.target.files[0]);
+    }else if(event.target.name === 'images') {
+      for(let i = 0; i < event.target.files.length; i++) {
+        file.append('images', event.target.files[i]);
+      }
+    }
   }
 
   async function SendData()
@@ -68,6 +73,7 @@ export default function AddProduct() {
         </Grid>
       </Grid>
         <input type="file" name='thumbnail' onChange={SetFileData}/>
+        <input type="file" name='images' multiple onChange={SetFileData}/>
         <button type='submit' onClick={onSubmit}>submit</button>
       </form>
         </div>

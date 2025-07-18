@@ -20,16 +20,26 @@ const db = new pg.Client({
 });
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const folderName = req.params.id;
+  destination: async function (req, file, cb) {
+    const userId = req.params.id;
+    var product_id = null;
+    try
+    {
+      const response = await db.query('insert into product (name ,catagory, description, store_id) values($1,$2,$3,$4) returning product_id',[
+        req.body.product_name, req.body.category_id, req.body.description, userId]);
+      product_id = response.rows[0].product_id;
+    }catch(err)
+    {
+      console.log('ERROR (insert product) : ' + err);
+    }
     if(file.fieldname === 'thumbnail')
     {
-      fs.mkdirSync(process.env.PRODUCT_IMAGES_PATH + folderName + '/thumbnail', { recursive: true });
-      cb(null, process.env.PRODUCT_IMAGES_PATH + folderName + '/thumbnail'); // Folder to save files
+      fs.mkdirSync(process.env.PRODUCT_IMAGES_PATH + product_id + '/thumbnail', { recursive: true });
+      cb(null, process.env.PRODUCT_IMAGES_PATH + product_id + '/thumbnail'); // Folder to save files
     }else if(file.fieldname === 'images')
     {
-      fs.mkdirSync(process.env.PRODUCT_IMAGES_PATH + folderName + '/images', { recursive: true });
-      cb(null, process.env.PRODUCT_IMAGES_PATH + folderName + '/images'); // Folder to save files
+      fs.mkdirSync(process.env.PRODUCT_IMAGES_PATH + product_id + '/images', { recursive: true });
+      cb(null, process.env.PRODUCT_IMAGES_PATH + product_id + '/images'); // Folder to save files
   }
 },
   filename: function (req, file, cb) {
@@ -335,6 +345,20 @@ app.get("/account/:id/sell/my_products", async(req,res)=>{
 app.post("/account/:id/sell/add_product", upload.fields([{name:'thumbnail', maxCount :1},{name:'images', maxCount:10}]), async(req,res)=>{
   console.log('File uploaded successfully!');
   res.send('File uploaded successfully!');
+});
+
+app.get("/account/:id/sell/add_product", async(req,res)=>{
+  const id = req.params.id;
+  try
+  {
+    const response = await db.query('select * from catagory');
+    const response_2 = await db.query('select company_name from client where id = $1',[id]);
+    res.json({catagories: response.rows, company_name: response_2.rows[0].company_name});
+  }catch(err)
+  {
+    console.log('ERROR (fetching categories) : ' + err);
+    res.json([]);
+  }
 });
 
 app.listen(PORT, () => {

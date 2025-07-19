@@ -19,36 +19,6 @@ const db = new pg.Client({
   port: process.env.DB_PORT
 });
 
-const storage = multer.diskStorage({
-  destination: async function (req, file, cb) {
-    const userId = req.params.id;
-    var product_id = null;
-    try
-    {
-      const response = await db.query('insert into product (name ,catagory, description, store_id) values($1,$2,$3,$4) returning product_id',[
-        req.body.product_name, req.body.category_id, req.body.description, userId]);
-      product_id = response.rows[0].product_id;
-    }catch(err)
-    {
-      console.log('ERROR (insert product) : ' + err);
-    }
-    if(file.fieldname === 'thumbnail')
-    {
-      fs.mkdirSync(process.env.PRODUCT_IMAGES_PATH + product_id + '/thumbnail', { recursive: true });
-      cb(null, process.env.PRODUCT_IMAGES_PATH + product_id + '/thumbnail'); // Folder to save files
-    }else if(file.fieldname === 'images')
-    {
-      fs.mkdirSync(process.env.PRODUCT_IMAGES_PATH + product_id + '/images', { recursive: true });
-      cb(null, process.env.PRODUCT_IMAGES_PATH + product_id + '/images'); // Folder to save files
-  }
-},
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  }
-});
-
-const upload = multer({ storage: storage });
-
 app.use(bodyParser.urlencoded({extended:true}));
 
 app.use(function(req, res, next) {
@@ -61,6 +31,46 @@ app.use(function(req, res, next) {
 });
 
 app.use(bodyParser.json());
+
+const insertProduct = async (req, res, next) => {
+  const userId = req.params.id;
+  try {
+    const response = await db.query(
+      'INSERT INTO product (store_id) VALUES ($1) RETURNING product_id',
+      [userId]
+    );
+    req.product_id = response.rows[0].product_id; // Attach to req for use in multer
+    next();
+  } catch (err) {
+    console.error('ERROR (insert product):', err);
+    res.status(500).json({ error: 'Failed to insert product' });
+  }
+};
+
+
+const storage = multer.diskStorage({
+  destination: async function (req, file, cb) {
+    const userId = req.params.id;
+    var product_id = req.product_id || req.body.product_id;
+    var folderPath ='';
+    if(file.fieldname === 'thumbnail')
+    {
+      folderPath = process.env.PRODUCT_IMAGES_PATH + product_id + '/thumbnail';
+      await db.query('UPDATE product SET thumbnail = $1 WHERE product_id = $2', [product_id + '/thumbnail' + '/' + file.originalname, product_id])
+    }else if(file.fieldname === 'images')
+    {
+      folderPath = process.env.PRODUCT_IMAGES_PATH + product_id + '/images';
+      await db.query('INSERT INTO product_images (product_id, img_url) VALUES ($1, $2)', [product_id, product_id + '/images' + '/' + file.originalname]);
+    }
+    fs.mkdirSync(folderPath, { recursive: true });
+    cb(null, folderPath); // Folder to save files
+},
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  }
+});
+
+const upload = multer({ storage: storage });
 
 db.connect();
 
@@ -342,8 +352,60 @@ app.get("/account/:id/sell/my_products", async(req,res)=>{
   }
 });
 
-app.post("/account/:id/sell/add_product", upload.fields([{name:'thumbnail', maxCount :1},{name:'images', maxCount:10}]), async(req,res)=>{
-  console.log('File uploaded successfully!');
+app.post("/account/:id/sell/add_product", insertProduct ,upload.fields([{name:'thumbnail', maxCount :1},{name:'images', maxCount:10}]), async(req,res)=>{
+  try
+  {
+    console.log(req.body);
+    try
+    {
+      await db.query('update product set name = $1, description = $2, catagory = $3 where product_id = $4',[
+      req.body.product_name, req.body.description, req.body.category_id, req.product_id]);
+      const price_ranges = JSON.parse(req.body.price_ranges);
+      if(price_ranges && price_ranges.length > 0)
+      {
+        for(var i = 0; i < price_ranges.length; i++)
+        {
+          try{
+            await db.query('insert into price_ranges (product_id, quantity_min, quantity_max, price) values ($1, $2, $3, $4)',[
+              req.product_id, price_ranges[i].min, price_ranges[i].max, price_ranges[i].price
+            ]);
+          }catch(err)
+          {
+            console.log('ERROR (inserting price range) : ' + err);
+          }
+        }
+      }
+      const attributes = JSON.parse(req.body.attributes);
+      try
+      {
+        await db.query('insert into product_attributes (product_id, brand_name, origin, model, warrenty, payment, shipping, single_package_size, single_package_weight) values ($1, $2, $3, $4, $5, $6, $7, $8, $9)',[
+          req.product_id,
+          attributes.brand_name,
+          attributes.origin,
+          attributes.model,
+          attributes.warrenty,
+          attributes.payment,
+          attributes.shipping,
+          attributes.single_package_size,
+          attributes.single_package_weight
+        ]);
+      }catch(err)
+      {
+        console.log('ERROR (inserting attributes) : ' + err);
+      }
+    }catch(err)
+    {
+      console.log(err);
+      res.status(500).send('Failed to update product details');
+      return;
+    }
+    
+  }catch(err)
+  {
+    console.log('ERROR (add_product) : ' + err);
+    res.status(500).send('Failed to add product');
+    return;
+  }
   res.send('File uploaded successfully!');
 });
 

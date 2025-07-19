@@ -117,7 +117,7 @@ export default function AddProduct() {
     </Paper>
   </Stack>
 
-  <form action="/account/1/sell/add_product" method="post">
+  <form>
     <Grid container spacing={2}>
       {/* Product Name */}
       <Grid size={3}>Product name</Grid>
@@ -126,6 +126,7 @@ export default function AddProduct() {
         <TextField
           id="outlined-multiline-flexible"
           placeholder="Enter product name"
+          required
           multiline
           name='product_name'
           onChange={SetFormData}
@@ -156,11 +157,12 @@ export default function AddProduct() {
       <Grid size={1}>:</Grid>
       <Grid size={8}>
         <FormControl sx={{ width: '30%' }} size="small">
-          <InputLabel id="demo-simple-select-label">Age</InputLabel>
+          <InputLabel id="demo-simple-select-label">Category</InputLabel>
           <Select
             size="small"
             labelId="demo-simple-select-label"
             id="demo-simple-select"
+            required
             value={age}
             label="Select Category"
             onChange={handleChange}
@@ -180,9 +182,10 @@ export default function AddProduct() {
       <Grid size={8}>
         <TextField
           id="outlined-multiline-flexible"
-          placeholder="Enter product name"
+          placeholder="Enter description"
           multiline
           name='description'
+          required
           onChange={SetFormData}
           value={formData.description || ''}
           maxRows={4}
@@ -201,6 +204,7 @@ export default function AddProduct() {
               <TextField
                 placeholder="Min Qty"
                 multiline
+                required
                 value={priceRange.min || null}
                 maxRows={4}
                 onChange={(e) => {setPriceRanges((prev)=>{if(prev[index]){prev[index].min = e.target.value;return [...prev]}else{return [...prev,{min: e.target.value, max: '', price: ''}]}})}}
@@ -210,6 +214,7 @@ export default function AddProduct() {
               <TextField
                 placeholder="Max Qty"
                 multiline
+                required
                 value={priceRange.max || null}
                 maxRows={4}
                 onChange={(e) => {setPriceRanges((prev)=>{if(prev[index]){prev[index].max = e.target.value;return [...prev]}else{return [...prev,{min: '', max: e.target.value, price: ''}]}})}}
@@ -219,6 +224,7 @@ export default function AddProduct() {
               <TextField
                 placeholder="Price"
                 multiline
+                required
                 value={priceRange.price || null}
                 maxRows={4}
                 onChange={(e) => {setPriceRanges((prev)=>{if(prev[index]){prev[index].price = e.target.value;return [...prev]}else{return [...prev,{min: '', max: '', price: e.target.value}]}})}}
@@ -247,14 +253,14 @@ export default function AddProduct() {
       <Grid size={3}>Upload thumbnail</Grid>
       <Grid size={1}>:</Grid>
       <Grid size={8}>
-        <input type="file" name="thumbnail" onChange={SetFileData} />
+        <input type="file" name="thumbnail" required onChange={SetFileData} />
       </Grid>
 
       {/* Product Images Upload */}
       <Grid size={3}>Product Images</Grid>
       <Grid size={1}>:</Grid>
       <Grid size={8}>
-        <input type="file" name="images" multiple onChange={SetFileData} />
+        <input type="file" name="images" required multiple onChange={SetFileData} />
       </Grid>
     </Grid>
 
@@ -280,8 +286,9 @@ export default function AddProduct() {
           <Grid size={8}>
             <TextField
               id="outlined-multiline-flexible"
-              placeholder="Enter attribute name"
+              placeholder="Enter attribute value"
               multiline
+              required
               name={label.toLowerCase().replace(/\s+/g, '_')}
               onChange={SetAttributes}
               maxRows={4}
@@ -305,7 +312,7 @@ export default function AddProduct() {
       }}
     >
       <div>
-        <Button variant="contained" onClick={onSubmit}>
+        <Button variant="contained" type='submit' onClick={onSubmit}>
           Submit
         </Button>
       </div>

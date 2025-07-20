@@ -9,6 +9,7 @@ import CountrySelect from './CountrySelect';
 import Button from '@mui/joy/Button';
 import Error from './Error';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 
 export default function RegisterPage()
@@ -17,6 +18,7 @@ export default function RegisterPage()
     const [error , setError] = useState({isError:true,message:'Please enter your country'});
     const [isCountrySelected,setIsCountrySelected] = useState(false);
     const [isPressedContine,steIsPressedContinue] = useState(false);
+    const [isSuccessful,setIsSuccessful] = useState(false);
 
     function SetFormData(event)
     {
@@ -73,6 +75,7 @@ export default function RegisterPage()
         {
             if(formData.pw === formData.c_pw)
             {
+                setIsSuccessful(true);
                 SendData();
             }else
             {
@@ -86,7 +89,7 @@ export default function RegisterPage()
     {
         steIsPressedContinue(true);
         if(!error.isError)
-        {
+        {            
             setIsCountrySelected(true);
         }
     }
@@ -113,9 +116,10 @@ export default function RegisterPage()
             <div id='form-area'>
                 <div style={{width:'500px'}}>
                     <ShowError/>
-                    <form> 
-                    
-                        {isCountrySelected?<div>
+                    <form>                        
+                        {isSuccessful ? <Stack sx={{justifyContent:'center',alignItems:'center'}} gap={3}><Typography sx={{color:'green'}}>Welcome to B2B Market, your account has been created successfully.</Typography><Link to='/'><Button>Go to Home</Button></Link></Stack> :
+                        <div>
+                            {isCountrySelected?<div>
                             <Stack gap={1.2}>
                             <Stack direction='row' sx={{justifyContent:'space-between'}}>
                             <div style={{width:'45%'}}>
@@ -166,6 +170,7 @@ export default function RegisterPage()
                         </FormControl>
                         <Stack direction='row' sx={{alignItems:'center',justifyContent:'center'}}><Button onClick={OnContinue}>Continue</Button></Stack>
                         </Stack>
+                        </div>}
                         </div>}
                     </form> 
                 </div>

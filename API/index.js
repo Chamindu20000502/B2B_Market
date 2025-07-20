@@ -5,12 +5,15 @@ import bodyParser from "body-parser";
 import bcrypt from 'bcrypt';
 import multer from "multer";
 import fs from "fs";
+import session from "express-session";
+import passport from "passport";
+import { Strategy } from "passport-local";
 
 env.config();
 
 const app = express();
 const PORT = process.env.PORT;
-const saltRounds = process.env.SALT_ROUNDS;
+const saltRounds = 10;
 const db = new pg.Client({
   user : process.env.DB_USER,
   host : process.env.DB_HOST,
@@ -18,6 +21,18 @@ const db = new pg.Client({
   password : process.env.DB_PW,
   port: process.env.DB_PORT
 });
+
+app.use(session({
+  secret : process.env.SESSION_SECRET,
+  resave : false,
+  saveUninitialized : true,
+  cookie :{
+    maxAge : 1000 * 60 * 60 * 24
+  }
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(bodyParser.urlencoded({extended:true}));
 
@@ -421,6 +436,50 @@ app.get("/account/:id/sell/add_product", async(req,res)=>{
     console.log('ERROR (fetching categories) : ' + err);
     res.json([]);
   }
+});
+
+app.post("/login", passport.authenticate("local", { failureRedirect: "/login" }), (req, res) => {
+  res.json({status: "success", message: "Login successful!", user: req.user});
+});
+
+passport.use("local",new Strategy(async function verify(username,password,cb){
+  try
+  {
+    const response = await db.query('SELECT * FROM client WHERE email = $1', [username]);
+    if(response.rowCount > 0)
+      {        
+        const user = response.rows[0];
+        const hashedPw = response.rows[0]["pw"];
+        bcrypt.compare(password,hashedPw,(err,result)=>{
+          if(!err)
+          {
+            if(result)
+              {
+                return cb(null,user);
+              }else{
+                return cb(null,false);
+              }
+          }else
+          {
+            return cb(err);
+          }
+        });
+      }else
+      {
+        return cb("Username not found");
+      }
+  }catch(err)
+  {
+    return cb(err);
+  }
+}));
+
+passport.serializeUser((user,cb)=>{
+  cb(null,user);
+});
+
+passport.deserializeUser((user,cb)=>{
+  cb(null,user);
 });
 
 app.listen(PORT, () => {
